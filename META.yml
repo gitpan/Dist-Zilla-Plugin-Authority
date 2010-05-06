@@ -1,0 +1,33 @@
+---
+abstract: 'add an $AUTHORITY to your packages'
+author:
+  - 'Apocalypse <APOCAL@cpan.org>'
+build_requires:
+  Test::More: 0.94
+configure_requires:
+  Module::Build: 0.36
+dynamic_config: 0
+generated_by: 'Module::Build version 0.3607'
+license: perl
+meta-spec:
+  url: http://module-build.sourceforge.net/META-spec-v1.4.html
+  version: 1.4
+name: Dist-Zilla-Plugin-Authority
+provides:
+  Dist::Zilla::Plugin::Authority:
+    file: lib/Dist/Zilla/Plugin/Authority.pm
+    version: 0.01
+requires:
+  Dist::Zilla::Role::FileFinderUser: 2.101170
+  Dist::Zilla::Role::FileMunger: 2.101170
+  Dist::Zilla::Role::MetaProvider: 2.101170
+  Moose: 1.01
+  Moose::Util::TypeConstraints: 1.01
+  PPI: 1.206
+  perl: 5.008
+resources:
+  bugtracker: http://rt.cpan.org/NoAuth/Bugs.html?Dist=Dist-Zilla-Plugin-Authority
+  homepage: http://search.cpan.org/dist/Dist-Zilla-Plugin-Authority
+  license: http://dev.perl.org/licenses/
+  repository: http://github.com/apocalypse/perl-dist-zilla-plugin-authority
+version: 0.01

@@ -1,0 +1,101 @@
+NAME
+    Dist::Zilla::Plugin::Authority - add an $AUTHORITY to your packages
+
+DESCRIPTION
+    This plugin adds the $AUTHORITY marker to your packages. Also, it can
+    add the authority information to the metadata, if requested.
+
+            # In your dist.ini:
+            [Authority]
+            authority = cpan:APOCAL
+            do_metadata = 1
+
+    This plugin accepts the following options:
+
+    *   authority
+
+        The authority you want to use. It should be something like
+        "cpan:APOCAL". Required.
+
+    *   do_metadata
+
+        A boolean value to control if the authority should be added to the
+        metadata. Defaults to false.
+
+        The metadata will look like this:
+
+                x_authority => 'cpan:APOCAL'
+
+SEE ALSO
+    Dist::Zilla
+
+    <http://www.perlmonks.org/?node_id=694377>
+
+    <http://perlcabal.org/syn/S11.html#Versioning>
+
+SUPPORT
+    You can find documentation for this module with the perldoc command.
+
+            perldoc Dist::Zilla::Plugin::Authority
+
+  Websites
+    *   Search CPAN
+
+        <http://search.cpan.org/dist/Dist-Zilla-Plugin-Authority>
+
+    *   AnnoCPAN: Annotated CPAN documentation
+
+        <http://annocpan.org/dist/Dist-Zilla-Plugin-Authority>
+
+    *   CPAN Ratings
+
+        <http://cpanratings.perl.org/d/Dist-Zilla-Plugin-Authority>
+
+    *   CPAN Forum
+
+        <http://cpanforum.com/dist/Dist-Zilla-Plugin-Authority>
+
+    *   RT: CPAN's Request Tracker
+
+        <http://rt.cpan.org/NoAuth/Bugs.html?Dist=Dist-Zilla-Plugin-Authorit
+        y>
+
+    *   CPANTS Kwalitee
+
+        <http://cpants.perl.org/dist/overview/Dist-Zilla-Plugin-Authority>
+
+    *   CPAN Testers Results
+
+        <http://cpantesters.org/distro/D/Dist-Zilla-Plugin-Authority.html>
+
+    *   CPAN Testers Matrix
+
+        <http://matrix.cpantesters.org/?dist=Dist-Zilla-Plugin-Authority>
+
+    *   Git Source Code Repository
+
+        <http://github.com/apocalypse/perl-dist-zilla-plugin-authority>
+
+  Bugs
+    Please report any bugs or feature requests to
+    "bug-dist-zilla-plugin-authority at rt.cpan.org", or through the web
+    interface at
+    <http://rt.cpan.org/NoAuth/ReportBug.html?Queue=Dist-Zilla-Plugin-Author
+    ity>. I will be notified, and then you'll automatically be notified of
+    progress on your bug as I make changes.
+
+AUTHOR
+    Apocalypse <apocal@cpan.org>
+
+    This module is basically a rip-off of RJBS' excellent
+    Dist::Zilla::Plugin::PkgVersion, thanks!
+
+COPYRIGHT AND LICENSE
+    Copyright 2010 by Apocalypse
+
+    This library is free software; you can redistribute it and/or modify it
+    under the same terms as Perl itself.
+
+    The full text of the license can be found in the LICENSE file included
+    with this module.
+
