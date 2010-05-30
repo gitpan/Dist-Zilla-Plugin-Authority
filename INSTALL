@@ -1,0 +1,27 @@
+
+This is the Perl distribution Dist-Zilla-Plugin-Authority.
+
+## Installation
+
+Dist-Zilla-Plugin-Authority installation is straightforward.
+If your CPAN shell is set up, you should just be able to do
+
+    % cpan Dist::Zilla::Plugin::Authority
+
+Download it, unpack it, then build it as per the usual:
+
+    % perl Makefile.PL
+    % make && make test
+
+Then install it:
+
+    % make install
+
+## Documentation
+
+Dist-Zilla-Plugin-Authority documentation is available as in POD.
+So you can do:
+
+    % perldoc Dist::Zilla::Plugin::Authority
+
+to read the documentation with your favorite pager.

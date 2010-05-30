@@ -1,5 +1,8 @@
 NAME
-    Dist::Zilla::Plugin::Authority - add an $AUTHORITY to your packages
+    Dist::Zilla::Plugin::Authority - Add an $AUTHORITY to your packages
+
+VERSION
+      This document describes v1.000 of Dist::Zilla::Plugin::Authority - released May 30, 2010 as part of Dist-Zilla-Plugin-Authority.
 
 DESCRIPTION
     This plugin adds the $AUTHORITY marker to your packages. Also, it can
@@ -10,33 +13,42 @@ DESCRIPTION
             authority = cpan:APOCAL
             do_metadata = 1
 
-    This plugin accepts the following options:
+    The resulting hunk of code would look something like this:
 
-    *   authority
+            BEGIN {
+              $Dist::Zilla::Plugin::Authority::AUTHORITY = 'cpan:APOCAL';
+            }
 
-        The authority you want to use. It should be something like
-        "cpan:APOCAL". Required.
+    This code will be added to any package declarations in your perl files.
 
-    *   do_metadata
+ATTRIBUTES
+  authority
+    The authority you want to use. It should be something like
+    "cpan:APOCAL".
 
-        A boolean value to control if the authority should be added to the
-        metadata. Defaults to false.
+    Required.
 
-        The metadata will look like this:
+  do_metadata
+    A boolean value to control if the authority should be added to the
+    metadata. ( META.yml or META.json )
 
-                x_authority => 'cpan:APOCAL'
+    Defaults to false.
+
+    The metadata will look like this:
+
+            x_authority => 'cpan:APOCAL'
 
 SEE ALSO
-    Dist::Zilla
+    *   Dist::Zilla
 
-    <http://www.perlmonks.org/?node_id=694377>
+    *   <http://www.perlmonks.org/?node_id=694377>
 
-    <http://perlcabal.org/syn/S11.html#Versioning>
+    *   <http://perlcabal.org/syn/S11.html#Versioning>
 
 SUPPORT
     You can find documentation for this module with the perldoc command.
 
-            perldoc Dist::Zilla::Plugin::Authority
+      perldoc Dist::Zilla::Plugin::Authority
 
   Websites
     *   Search CPAN
@@ -55,7 +67,7 @@ SUPPORT
 
         <http://cpanforum.com/dist/Dist-Zilla-Plugin-Authority>
 
-    *   RT: CPAN's Request Tracker
+    *   RT: CPAN's Bug Tracker
 
         <http://rt.cpan.org/NoAuth/Bugs.html?Dist=Dist-Zilla-Plugin-Authorit
         y>
@@ -72,7 +84,12 @@ SUPPORT
 
         <http://matrix.cpantesters.org/?dist=Dist-Zilla-Plugin-Authority>
 
-    *   Git Source Code Repository
+    *   Source Code Repository
+
+        The code is open to the world, and available for you to hack on.
+        Please feel free to browse it and play with it, or whatever. If you
+        want to contribute patches, please send me a diff or prod me to pull
+        from your repository :)
 
         <http://github.com/apocalypse/perl-dist-zilla-plugin-authority>
 
@@ -85,17 +102,17 @@ SUPPORT
     progress on your bug as I make changes.
 
 AUTHOR
-    Apocalypse <apocal@cpan.org>
+      Apocalypse <APOCAL@cpan.org>
 
+ACKNOWLEDGEMENTS
     This module is basically a rip-off of RJBS' excellent
     Dist::Zilla::Plugin::PkgVersion, thanks!
 
+    Props goes out to FLORA for prodding me to improve this module!
+
 COPYRIGHT AND LICENSE
-    Copyright 2010 by Apocalypse
+    This software is copyright (c) 2010 by Apocalypse.
 
-    This library is free software; you can redistribute it and/or modify it
-    under the same terms as Perl itself.
-
-    The full text of the license can be found in the LICENSE file included
-    with this module.
+    This is free software; you can redistribute it and/or modify it under
+    the same terms as the Perl 5 programming language system itself.
 

@@ -1,6 +1,21 @@
-package Dist::Zilla::Plugin::Authority;
+# 
+# This file is part of Dist-Zilla-Plugin-Authority
+# 
+# This software is copyright (c) 2010 by Apocalypse.
+# 
+# This is free software; you can redistribute it and/or modify it under
+# the same terms as the Perl 5 programming language system itself.
+# 
 use strict; use warnings;
-our $VERSION = '0.01';
+package Dist::Zilla::Plugin::Authority;
+BEGIN {
+  $Dist::Zilla::Plugin::Authority::VERSION = '1.000';
+}
+BEGIN {
+  $Dist::Zilla::Plugin::Authority::AUTHORITY = 'cpan:APOCAL';
+}
+
+# ABSTRACT: Add an $AUTHORITY to your packages
 
 use Moose 1.01;
 use PPI 1.206;
@@ -17,6 +32,7 @@ with(
 	},
 );
 
+
 {
 	use Moose::Util::TypeConstraints 1.01;
 
@@ -31,6 +47,7 @@ with(
 
 	no Moose::Util::TypeConstraints;
 }
+
 
 has do_metadata => (
 	is => 'ro',
@@ -69,32 +86,42 @@ sub _munge_perl {
 	my( $self, $file ) = @_;
 
 	my $content = $file->content;
-
-	my $document = PPI::Document->new(\$content) or Carp::croak( PPI::Document->errstr );
+	my $document = PPI::Document->new( \$content ) or Carp::croak( PPI::Document->errstr );
 
 	{
 		my $code_only = $document->clone;
 		$code_only->prune( "PPI::Token::$_" ) for qw( Comment Pod Quote Regexp );
 		if ( $code_only->serialize =~ /\$AUTHORITY\s*=/sm ) {
-			$self->log( sprintf( 'skipping %s: assigns to $AUTHORITY', $file->name ) );
+			$self->log( [ 'skipping %s: assigns to $AUTHORITY', $file->name ] );
 			return;
 		}
 	}
 
 	return unless my $package_stmts = $document->find('PPI::Statement::Package');
 
+	my %seen_pkgs;
+
 	for my $stmt ( @$package_stmts ) {
 		my $package = $stmt->namespace;
+
+		# Thanks to rafl ( Florian Ragwitz ) for this
+		if ( $seen_pkgs{ $package }++ ) {
+			$self->log( [ 'skipping package re-declaration for %s', $package ] );
+			next;
+		}
+
+		# Thanks to autarch ( Dave Rolsky ) for this
+		if ( $stmt->content =~ /package\s*\n\s*\Q$package/ ) {
+			$self->log([ 'skipping package for %s, it looks like a monkey patch', $package ]);
+			next;
+		}
 
 		# Same \x20 hack as seen in PkgVersion, blarh!
 		my $perl = "BEGIN {\n  \$$package\::AUTHORITY\x20=\x20'" . $self->authority . "';\n}\n";
 		my $doc = PPI::Document->new( \$perl );
 		my @children = $doc->schildren;
 
-		$self->log_debug([
-			'adding $AUTHORITY assignment in %s',
-			$file->name,
-		]);
+		$self->log_debug( [ 'adding $AUTHORITY assignment in %s', $file->name ] );
 
 		Carp::carp( "error inserting AUTHORITY in " . $file->name )
 			unless $stmt->insert_after( $children[0]->clone )
@@ -109,13 +136,21 @@ no Moose;
 __PACKAGE__->meta->make_immutable;
 1;
 
+
+__END__
 =pod
 
-=for stopwords AnnoCPAN CPAN CPANTS Kwalitee RT dist prereqs
+=for Pod::Coverage metadata munge_files
+
+=for stopwords RJBS json metadata yml
 
 =head1 NAME
 
-Dist::Zilla::Plugin::Authority - add an $AUTHORITY to your packages
+Dist::Zilla::Plugin::Authority - Add an $AUTHORITY to your packages
+
+=head1 VERSION
+
+  This document describes v1.000 of Dist::Zilla::Plugin::Authority - released May 30, 2010 as part of Dist-Zilla-Plugin-Authority.
 
 =head1 DESCRIPTION
 
@@ -127,75 +162,117 @@ to the metadata, if requested.
 	authority = cpan:APOCAL
 	do_metadata = 1
 
-This plugin accepts the following options:
+The resulting hunk of code would look something like this:
 
-=over 4
+	BEGIN {
+	  $Dist::Zilla::Plugin::Authority::AUTHORITY = 'cpan:APOCAL';
+	}
 
-=item * authority
+This code will be added to any package declarations in your perl files.
 
-The authority you want to use. It should be something like C<cpan:APOCAL>. Required.
+=head1 ATTRIBUTES
 
-=item * do_metadata
+=head2 authority
 
-A boolean value to control if the authority should be added to the metadata. Defaults to false.
+The authority you want to use. It should be something like C<cpan:APOCAL>.
+
+Required.
+
+=head2 do_metadata
+
+A boolean value to control if the authority should be added to the metadata. ( META.yml or META.json )
+
+Defaults to false.
 
 The metadata will look like this:
 
 	x_authority => 'cpan:APOCAL'
 
-=back
-
 =head1 SEE ALSO
+
+=over 4
+
+=item *
 
 L<Dist::Zilla>
 
+=item *
+
 L<http://www.perlmonks.org/?node_id=694377>
 
+=item *
+
 L<http://perlcabal.org/syn/S11.html#Versioning>
+
+=back
+
+=for :stopwords CPAN AnnoCPAN RT CPANTS Kwalitee diff
 
 =head1 SUPPORT
 
 You can find documentation for this module with the perldoc command.
 
-	perldoc Dist::Zilla::Plugin::Authority
+  perldoc Dist::Zilla::Plugin::Authority
 
 =head2 Websites
 
 =over 4
 
-=item * Search CPAN
+=item *
+
+Search CPAN
 
 L<http://search.cpan.org/dist/Dist-Zilla-Plugin-Authority>
 
-=item * AnnoCPAN: Annotated CPAN documentation
+=item *
+
+AnnoCPAN: Annotated CPAN documentation
 
 L<http://annocpan.org/dist/Dist-Zilla-Plugin-Authority>
 
-=item * CPAN Ratings
+=item *
+
+CPAN Ratings
 
 L<http://cpanratings.perl.org/d/Dist-Zilla-Plugin-Authority>
 
-=item * CPAN Forum
+=item *
+
+CPAN Forum
 
 L<http://cpanforum.com/dist/Dist-Zilla-Plugin-Authority>
 
-=item * RT: CPAN's Request Tracker
+=item *
+
+RT: CPAN's Bug Tracker
 
 L<http://rt.cpan.org/NoAuth/Bugs.html?Dist=Dist-Zilla-Plugin-Authority>
 
-=item * CPANTS Kwalitee
+=item *
+
+CPANTS Kwalitee
 
 L<http://cpants.perl.org/dist/overview/Dist-Zilla-Plugin-Authority>
 
-=item * CPAN Testers Results
+=item *
+
+CPAN Testers Results
 
 L<http://cpantesters.org/distro/D/Dist-Zilla-Plugin-Authority.html>
 
-=item * CPAN Testers Matrix
+=item *
+
+CPAN Testers Matrix
 
 L<http://matrix.cpantesters.org/?dist=Dist-Zilla-Plugin-Authority>
 
-=item * Git Source Code Repository
+=item *
+
+Source Code Repository
+
+The code is open to the world, and available for you to hack on. Please feel free to browse it and play
+with it, or whatever. If you want to contribute patches, please send me a diff or prod me to pull
+from your repository :)
 
 L<http://github.com/apocalypse/perl-dist-zilla-plugin-authority>
 
@@ -209,17 +286,20 @@ notified, and then you'll automatically be notified of progress on your bug as I
 
 =head1 AUTHOR
 
-Apocalypse E<lt>apocal@cpan.orgE<gt>
+  Apocalypse <APOCAL@cpan.org>
+
+=head1 ACKNOWLEDGEMENTS
 
 This module is basically a rip-off of RJBS' excellent L<Dist::Zilla::Plugin::PkgVersion>, thanks!
 
+Props goes out to FLORA for prodding me to improve this module!
+
 =head1 COPYRIGHT AND LICENSE
 
-Copyright 2010 by Apocalypse
+This software is copyright (c) 2010 by Apocalypse.
 
-This library is free software; you can redistribute it and/or modify
-it under the same terms as Perl itself.
-
-The full text of the license can be found in the LICENSE file included with this module.
+This is free software; you can redistribute it and/or modify it under
+the same terms as the Perl 5 programming language system itself.
 
 =cut
+
