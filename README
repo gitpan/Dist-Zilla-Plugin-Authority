@@ -2,7 +2,7 @@ NAME
     Dist::Zilla::Plugin::Authority - Add an $AUTHORITY to your packages
 
 VERSION
-      This document describes v1.000 of Dist::Zilla::Plugin::Authority - released May 30, 2010 as part of Dist-Zilla-Plugin-Authority.
+      This document describes v1.001 of Dist::Zilla::Plugin::Authority - released December 07, 2010 as part of Dist-Zilla-Plugin-Authority.
 
 DESCRIPTION
     This plugin adds the $AUTHORITY marker to your packages. Also, it can
@@ -26,13 +26,14 @@ ATTRIBUTES
     The authority you want to use. It should be something like
     "cpan:APOCAL".
 
-    Required.
+    Defaults to the username set in the %PAUSE stash in the global
+    config.ini or dist.ini ( Dist::Zilla v4 addition! )
 
   do_metadata
     A boolean value to control if the authority should be added to the
     metadata. ( META.yml or META.json )
 
-    Defaults to false.
+    Defaults to true.
 
     The metadata will look like this:
 
@@ -55,6 +56,11 @@ SUPPORT
 
         <http://search.cpan.org/dist/Dist-Zilla-Plugin-Authority>
 
+    *   RT: CPAN's Bug Tracker
+
+        <http://rt.cpan.org/NoAuth/Bugs.html?Dist=Dist-Zilla-Plugin-Authorit
+        y>
+
     *   AnnoCPAN: Annotated CPAN documentation
 
         <http://annocpan.org/dist/Dist-Zilla-Plugin-Authority>
@@ -66,11 +72,6 @@ SUPPORT
     *   CPAN Forum
 
         <http://cpanforum.com/dist/Dist-Zilla-Plugin-Authority>
-
-    *   RT: CPAN's Bug Tracker
-
-        <http://rt.cpan.org/NoAuth/Bugs.html?Dist=Dist-Zilla-Plugin-Authorit
-        y>
 
     *   CPANTS Kwalitee
 
@@ -84,15 +85,6 @@ SUPPORT
 
         <http://matrix.cpantesters.org/?dist=Dist-Zilla-Plugin-Authority>
 
-    *   Source Code Repository
-
-        The code is open to the world, and available for you to hack on.
-        Please feel free to browse it and play with it, or whatever. If you
-        want to contribute patches, please send me a diff or prod me to pull
-        from your repository :)
-
-        <http://github.com/apocalypse/perl-dist-zilla-plugin-authority>
-
   Bugs
     Please report any bugs or feature requests to
     "bug-dist-zilla-plugin-authority at rt.cpan.org", or through the web
@@ -101,8 +93,18 @@ SUPPORT
     ity>. I will be notified, and then you'll automatically be notified of
     progress on your bug as I make changes.
 
+  Source Code
+    The code is open to the world, and available for you to hack on. Please
+    feel free to browse it and play with it, or whatever. If you want to
+    contribute patches, please send me a diff or prod me to pull from your
+    repository :)
+
+    <http://github.com/apocalypse/perl-dist-zilla-plugin-authority>
+
+      git clone git://github.com/apocalypse/perl-dist-zilla-plugin-authority.git
+
 AUTHOR
-      Apocalypse <APOCAL@cpan.org>
+    Apocalypse <APOCAL@cpan.org>
 
 ACKNOWLEDGEMENTS
     This module is basically a rip-off of RJBS' excellent
@@ -115,4 +117,7 @@ COPYRIGHT AND LICENSE
 
     This is free software; you can redistribute it and/or modify it under
     the same terms as the Perl 5 programming language system itself.
+
+    The full text of the license can be found in the LICENSE file included
+    with this distribution.
 

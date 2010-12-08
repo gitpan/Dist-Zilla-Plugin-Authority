@@ -1,15 +1,15 @@
-# 
+#
 # This file is part of Dist-Zilla-Plugin-Authority
-# 
+#
 # This software is copyright (c) 2010 by Apocalypse.
-# 
+#
 # This is free software; you can redistribute it and/or modify it under
 # the same terms as the Perl 5 programming language system itself.
-# 
+#
 use strict; use warnings;
 package Dist::Zilla::Plugin::Authority;
 BEGIN {
-  $Dist::Zilla::Plugin::Authority::VERSION = '1.000';
+  $Dist::Zilla::Plugin::Authority::VERSION = '1.001';
 }
 BEGIN {
   $Dist::Zilla::Plugin::Authority::AUTHORITY = 'cpan:APOCAL';
@@ -17,18 +17,15 @@ BEGIN {
 
 # ABSTRACT: Add an $AUTHORITY to your packages
 
-use Moose 1.01;
+use Moose 1.03;
 use PPI 1.206;
 
-# TODO wait for improved Moose that allows "with 'Foo::Bar' => { -version => 1.23 };"
-use Dist::Zilla::Role::MetaProvider 2.101170;
-use Dist::Zilla::Role::FileMunger 2.101170;
-use Dist::Zilla::Role::FileFinderUser 2.101170;
 with(
-	'Dist::Zilla::Role::MetaProvider',
-	'Dist::Zilla::Role::FileMunger',
+	'Dist::Zilla::Role::MetaProvider' => { -version => '4.102345' },
+	'Dist::Zilla::Role::FileMunger' => { -version => '4.102345' },
 	'Dist::Zilla::Role::FileFinderUser' => {
-		default_finders => [ ':InstallModules' ],
+		-version => '4.102345',
+		default_finders => [ ':InstallModules', ':ExecFiles' ],
 	},
 );
 
@@ -40,9 +37,19 @@ with(
 		is => 'ro',
 		isa => subtype( 'Str'
 			=> where { $_ =~ /^\w+\:\w+$/ }
-			=> message { "Authority must be in the form of 'cpan:PAUSEID'." }
+			=> message { "Authority must be in the form of 'cpan:PAUSEID'" }
 		),
-		required => 1,
+		lazy => 1,
+		default => sub {
+			my $self = shift;
+			my $stash = $self->zilla->stash_named( '%PAUSE' );
+			if ( ! defined $stash ) {
+				$self->log_fatal( 'PAUSE credentials not set in config.ini/dist.ini! Please set it or specify an authority for this plugin.' );
+			}
+
+			$self->log_debug( [ 'using PAUSE id "%s" for AUTHORITY', $stash->username ] );
+			return 'cpan:' . $stash->username;
+		},
 	);
 
 	no Moose::Util::TypeConstraints;
@@ -52,7 +59,7 @@ with(
 has do_metadata => (
 	is => 'ro',
 	isa => 'Bool',
-	default => 0,
+	default => 1,
 );
 
 sub metadata {
@@ -111,8 +118,8 @@ sub _munge_perl {
 		}
 
 		# Thanks to autarch ( Dave Rolsky ) for this
-		if ( $stmt->content =~ /package\s*\n\s*\Q$package/ ) {
-			$self->log([ 'skipping package for %s, it looks like a monkey patch', $package ]);
+		if ( $stmt->content =~ /package\s*(?:#.*)?\n\s*\Q$package/ ) {
+			$self->log([ 'skipping private package %s', $package ]);
 			next;
 		}
 
@@ -121,7 +128,7 @@ sub _munge_perl {
 		my $doc = PPI::Document->new( \$perl );
 		my @children = $doc->schildren;
 
-		$self->log_debug( [ 'adding $AUTHORITY assignment in %s', $file->name ] );
+		$self->log_debug( [ 'adding $AUTHORITY assignment to %s in %s', $package, $file->name ] );
 
 		Carp::carp( "error inserting AUTHORITY in " . $file->name )
 			unless $stmt->insert_after( $children[0]->clone )
@@ -130,7 +137,6 @@ sub _munge_perl {
 
 	$file->content( $document->serialize );
 }
-
 
 no Moose;
 __PACKAGE__->meta->make_immutable;
@@ -142,7 +148,7 @@ __END__
 
 =for Pod::Coverage metadata munge_files
 
-=for stopwords RJBS json metadata yml
+=for :stopwords RJBS metadata FLORA dist ini json username yml
 
 =head1 NAME
 
@@ -150,7 +156,7 @@ Dist::Zilla::Plugin::Authority - Add an $AUTHORITY to your packages
 
 =head1 VERSION
 
-  This document describes v1.000 of Dist::Zilla::Plugin::Authority - released May 30, 2010 as part of Dist-Zilla-Plugin-Authority.
+  This document describes v1.001 of Dist::Zilla::Plugin::Authority - released December 07, 2010 as part of Dist-Zilla-Plugin-Authority.
 
 =head1 DESCRIPTION
 
@@ -176,13 +182,13 @@ This code will be added to any package declarations in your perl files.
 
 The authority you want to use. It should be something like C<cpan:APOCAL>.
 
-Required.
+Defaults to the username set in the %PAUSE stash in the global config.ini or dist.ini ( Dist::Zilla v4 addition! )
 
 =head2 do_metadata
 
 A boolean value to control if the authority should be added to the metadata. ( META.yml or META.json )
 
-Defaults to false.
+Defaults to true.
 
 The metadata will look like this:
 
@@ -226,6 +232,12 @@ L<http://search.cpan.org/dist/Dist-Zilla-Plugin-Authority>
 
 =item *
 
+RT: CPAN's Bug Tracker
+
+L<http://rt.cpan.org/NoAuth/Bugs.html?Dist=Dist-Zilla-Plugin-Authority>
+
+=item *
+
 AnnoCPAN: Annotated CPAN documentation
 
 L<http://annocpan.org/dist/Dist-Zilla-Plugin-Authority>
@@ -241,12 +253,6 @@ L<http://cpanratings.perl.org/d/Dist-Zilla-Plugin-Authority>
 CPAN Forum
 
 L<http://cpanforum.com/dist/Dist-Zilla-Plugin-Authority>
-
-=item *
-
-RT: CPAN's Bug Tracker
-
-L<http://rt.cpan.org/NoAuth/Bugs.html?Dist=Dist-Zilla-Plugin-Authority>
 
 =item *
 
@@ -266,16 +272,6 @@ CPAN Testers Matrix
 
 L<http://matrix.cpantesters.org/?dist=Dist-Zilla-Plugin-Authority>
 
-=item *
-
-Source Code Repository
-
-The code is open to the world, and available for you to hack on. Please feel free to browse it and play
-with it, or whatever. If you want to contribute patches, please send me a diff or prod me to pull
-from your repository :)
-
-L<http://github.com/apocalypse/perl-dist-zilla-plugin-authority>
-
 =back
 
 =head2 Bugs
@@ -284,9 +280,19 @@ Please report any bugs or feature requests to C<bug-dist-zilla-plugin-authority 
 the web interface at L<http://rt.cpan.org/NoAuth/ReportBug.html?Queue=Dist-Zilla-Plugin-Authority>.  I will be
 notified, and then you'll automatically be notified of progress on your bug as I make changes.
 
+=head2 Source Code
+
+The code is open to the world, and available for you to hack on. Please feel free to browse it and play
+with it, or whatever. If you want to contribute patches, please send me a diff or prod me to pull
+from your repository :)
+
+L<http://github.com/apocalypse/perl-dist-zilla-plugin-authority>
+
+  git clone git://github.com/apocalypse/perl-dist-zilla-plugin-authority.git
+
 =head1 AUTHOR
 
-  Apocalypse <APOCAL@cpan.org>
+Apocalypse <APOCAL@cpan.org>
 
 =head1 ACKNOWLEDGEMENTS
 
@@ -300,6 +306,8 @@ This software is copyright (c) 2010 by Apocalypse.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.
+
+The full text of the license can be found in the LICENSE file included with this distribution.
 
 =cut
 

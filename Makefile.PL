@@ -2,7 +2,7 @@
 use strict;
 use warnings;
 
- BEGIN { require 5.006; } 
+BEGIN { require 5.006; }
 
 use ExtUtils::MakeMaker 6.31;
 
@@ -15,7 +15,7 @@ my %WriteMakefileArgs = (
     'File::Find' => '0',
     'File::Temp' => '0',
     'ExtUtils::MakeMaker' => '6.31',
-    'Test::More' => '0'
+    'Test::More' => '0.88'
   },
   'CONFIGURE_REQUIRES' => {
     'ExtUtils::MakeMaker' => '6.31'
@@ -25,14 +25,14 @@ my %WriteMakefileArgs = (
   'LICENSE' => 'perl',
   'NAME' => 'Dist::Zilla::Plugin::Authority',
   'PREREQ_PM' => {
-    'Dist::Zilla::Role::FileFinderUser' => '2.101170',
-    'Dist::Zilla::Role::FileMunger' => '2.101170',
-    'Dist::Zilla::Role::MetaProvider' => '2.101170',
-    'Moose' => '1.01',
+    'Dist::Zilla::Role::FileFinderUser' => '4.102345',
+    'Dist::Zilla::Role::FileMunger' => '4.102345',
+    'Dist::Zilla::Role::MetaProvider' => '4.102345',
+    'Moose' => '1.03',
     'Moose::Util::TypeConstraints' => '1.01',
     'PPI' => '1.206'
   },
-  'VERSION' => '1.000',
+  'VERSION' => '1.001',
   'test' => {
     'TESTS' => 't/*.t'
   }
@@ -41,10 +41,10 @@ my %WriteMakefileArgs = (
 
 unless ( eval { ExtUtils::MakeMaker->VERSION(6.56) } ) {
   my $br = delete $WriteMakefileArgs{BUILD_REQUIRES};
-  my $pp = $WriteMakefileArgs{PREREQ_PM}; 
+  my $pp = $WriteMakefileArgs{PREREQ_PM};
   for my $mod ( keys %$br ) {
     if ( exists $pp->{$mod} ) {
-      $pp->{$mod} = $br->{$mod} if $br->{$mod} > $pp->{$mod}; 
+      $pp->{$mod} = $br->{$mod} if $br->{$mod} > $pp->{$mod};
     }
     else {
       $pp->{$mod} = $br->{$mod};

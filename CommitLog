@@ -1,3 +1,62 @@
+==============================
+9999-99-99 99:99:99 +0000 HEAD
+==============================
+
+  commit e6a747e42f296aacd7e39e83502894e86ce1d920
+  Author: Apocalypse <perl@0ne.us>
+  Date:   Tue Dec 7 18:25:03 2010 -0700
+  
+    pre-release cleanups
+
+  commit 2fec06211b36d12da2ecf880e89d6b21d2ec7199
+  Author: Apocalypse <perl@0ne.us>
+  Date:   Mon Dec 6 16:33:50 2010 -0700
+  
+    tweak some printouts
+
+  commit 3ed6fa07dd35bd95cb23a98737a03e9ed5201949
+  Author: Apocalypse <perl@0ne.us>
+  Date:   Mon Dec 6 12:39:40 2010 -0700
+  
+    make do_metadata default to true
+
+  commit 61d6b96c63704420d2288ee0a00166d5780ae9ed
+  Author: Apocalypse <perl@0ne.us>
+  Date:   Sun Dec 5 23:29:25 2010 -0700
+  
+    remove some unnecessary stopwords
+
+  commit 837b3b531141f8353d440fc4aaf769410b09766c
+  Author: Apocalypse <perl@0ne.us>
+  Date:   Sun Dec 5 22:11:33 2010 -0700
+  
+    add support for script files, automatic PAUSE detection, dzil v4
+    support, and cleanup some stuff
+
+  commit e6849e4d19300d69e16327ee15fa8a7704ae34b6
+  Author: Apocalypse <perl@0ne.us>
+  Date:   Sun Dec 5 19:20:43 2010 -0700
+  
+    tidy up Changes
+
+  commit eb318b01848f2decc7b7b0f7c0bbe6e7f879e34b
+  Author: Apocalypse <perl@0ne.us>
+  Date:   Sun Dec 5 19:16:08 2010 -0700
+  
+    backport changes to PkgVersion in dzil v4 and minor cleanups
+
+  commit 45896b8195e0724085f347e7991e70d1fdc3e268
+  Author: Apocalypse <perl@0ne.us>
+  Date:   Sun May 30 11:07:33 2010 -0700
+  
+    fix gitignore again
+
+  commit 8f0df5225619a8f05d1462dd1e3d256b566c0c49
+  Author: Apocalypse <perl@0ne.us>
+  Date:   Sun May 30 10:51:58 2010 -0700
+  
+    fix gitingore problem 
+
 ===================================
 End of changes in the last 365 days
 ===================================
