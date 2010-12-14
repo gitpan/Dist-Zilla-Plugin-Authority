@@ -9,7 +9,7 @@
 use strict; use warnings;
 package Dist::Zilla::Plugin::Authority;
 BEGIN {
-  $Dist::Zilla::Plugin::Authority::VERSION = '1.001';
+  $Dist::Zilla::Plugin::Authority::VERSION = '1.002';
 }
 BEGIN {
   $Dist::Zilla::Plugin::Authority::AUTHORITY = 'cpan:APOCAL';
@@ -62,6 +62,13 @@ has do_metadata => (
 	default => 1,
 );
 
+
+has do_munging => (
+	is => 'ro',
+	isa => 'Bool',
+	default => 1,
+);
+
 sub metadata {
 	my( $self ) = @_;
 
@@ -77,13 +84,14 @@ sub metadata {
 sub munge_files {
 	my( $self ) = @_;
 
+	return if ! $self->do_munging;
+
 	$self->_munge_file( $_ ) for @{ $self->found_files };
 }
 
 sub _munge_file {
 	my( $self, $file ) = @_;
 
-	return                           if $file->name    =~ /\.t$/i;
 	return $self->_munge_perl($file) if $file->name    =~ /\.(?:pm|pl)$/i;
 	return $self->_munge_perl($file) if $file->content =~ /^#!(?:.*)perl(?:$|\s)/;
 	return;
@@ -156,25 +164,26 @@ Dist::Zilla::Plugin::Authority - Add an $AUTHORITY to your packages
 
 =head1 VERSION
 
-  This document describes v1.001 of Dist::Zilla::Plugin::Authority - released December 07, 2010 as part of Dist-Zilla-Plugin-Authority.
+  This document describes v1.002 of Dist::Zilla::Plugin::Authority - released December 13, 2010 as part of Dist-Zilla-Plugin-Authority.
 
 =head1 DESCRIPTION
 
-This plugin adds the $AUTHORITY marker to your packages. Also, it can add the authority information
-to the metadata, if requested.
+This plugin adds the authority data to your distribution. It adds the data to your modules and metadata. Normally it
+looks for the PAUSE author id in your L<Dist::Zilla> configuration. If you want to override it, please use the 'authority'
+attribute.
 
 	# In your dist.ini:
 	[Authority]
-	authority = cpan:APOCAL
-	do_metadata = 1
 
-The resulting hunk of code would look something like this:
+This code will be added to any package declarations in your perl files:
 
 	BEGIN {
 	  $Dist::Zilla::Plugin::Authority::AUTHORITY = 'cpan:APOCAL';
 	}
 
-This code will be added to any package declarations in your perl files.
+Your metadata ( META.yml or META.json ) will have an entry looking like this:
+
+	x_authority => 'cpan:APOCAL'
 
 =head1 ATTRIBUTES
 
@@ -186,13 +195,15 @@ Defaults to the username set in the %PAUSE stash in the global config.ini or dis
 
 =head2 do_metadata
 
-A boolean value to control if the authority should be added to the metadata. ( META.yml or META.json )
+A boolean value to control if the authority should be added to the metadata.
 
 Defaults to true.
 
-The metadata will look like this:
+=head2 do_munging
 
-	x_authority => 'cpan:APOCAL'
+A boolean value to control if the $AUTHORITY variable should be added to the modules.
+
+Defaults to true.
 
 =head1 SEE ALSO
 
@@ -212,7 +223,7 @@ L<http://perlcabal.org/syn/S11.html#Versioning>
 
 =back
 
-=for :stopwords CPAN AnnoCPAN RT CPANTS Kwalitee diff
+=for :stopwords CPAN AnnoCPAN RT CPANTS Kwalitee diff IRC
 
 =head1 SUPPORT
 
@@ -221,6 +232,9 @@ You can find documentation for this module with the perldoc command.
   perldoc Dist::Zilla::Plugin::Authority
 
 =head2 Websites
+
+The following websites have more information about this module, and may be of help to you. As always,
+in addition to those websites please use your favorite search engine to discover more resources.
 
 =over 4
 
@@ -274,9 +288,38 @@ L<http://matrix.cpantesters.org/?dist=Dist-Zilla-Plugin-Authority>
 
 =back
 
-=head2 Bugs
+=head2 Internet Relay Chat
 
-Please report any bugs or feature requests to C<bug-dist-zilla-plugin-authority at rt.cpan.org>, or through
+You can get live help by using IRC ( Internet Relay Chat ). If you don't know what IRC is,
+please read this excellent guide: L<http://en.wikipedia.org/wiki/Internet_Relay_Chat>. Please
+be courteous and patient when talking to us, as we might be busy or sleeping! You can join
+those networks/channels and get help:
+
+=over 4
+
+=item *
+
+irc.perl.org
+
+You can connect to the server at 'irc.perl.org' and join this channel: #perl-help then talk to this person for help: Apocalypse.
+
+=item *
+
+irc.freenode.net
+
+You can connect to the server at 'irc.freenode.net' and join this channel: #perl then talk to this person for help: Apocal.
+
+=item *
+
+irc.efnet.org
+
+You can connect to the server at 'irc.efnet.org' and join this channel: #perl then talk to this person for help: Ap0cal.
+
+=back
+
+=head2 Bugs / Feature Requests
+
+Please report any bugs or feature requests by email to C<bug-dist-zilla-plugin-authority at rt.cpan.org>, or through
 the web interface at L<http://rt.cpan.org/NoAuth/ReportBug.html?Queue=Dist-Zilla-Plugin-Authority>.  I will be
 notified, and then you'll automatically be notified of progress on your bug as I make changes.
 

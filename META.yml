@@ -23,7 +23,7 @@ no_index:
 provides:
   Dist::Zilla::Plugin::Authority:
     file: lib/Dist/Zilla/Plugin/Authority.pm
-    version: 1.001
+    version: 1.002
 requires:
   Dist::Zilla::Role::FileFinderUser: 4.102345
   Dist::Zilla::Role::FileMunger: 4.102345
@@ -37,7 +37,7 @@ resources:
   homepage: http://search.cpan.org/dist/Dist-Zilla-Plugin-Authority/
   license: http://dev.perl.org/licenses/
   repository: git://github.com/apocalypse/perl-dist-zilla-plugin-authority.git
-version: 1.001
+version: 1.002
 x_BuiltWith:
   modules:
     Dist::Zilla::Role::FileFinderUser: 4.102345
@@ -65,7 +65,7 @@ x_Dist_Zilla:
     -
       class: Dist::Zilla::Plugin::Git::NextVersion
       name: '@Apocalyptic/Git::NextVersion'
-      version: 1.102810
+      version: 1.103470
     -
       class: Dist::Zilla::Plugin::GatherDir
       name: '@Apocalyptic/GatherDir'
@@ -125,7 +125,7 @@ x_Dist_Zilla:
     -
       class: Dist::Zilla::Plugin::MinimumPerl
       name: '@Apocalyptic/MinimumPerl'
-      version: 1.000
+      version: 1.001
     -
       class: Dist::Zilla::Plugin::Bugtracker
       name: '@Apocalyptic/Bugtracker'
@@ -215,7 +215,7 @@ x_Dist_Zilla:
     -
       class: Dist::Zilla::Plugin::Git::Check
       name: '@Apocalyptic/Git::Check'
-      version: 1.102810
+      version: 1.103470
     -
       class: Dist::Zilla::Plugin::ConfirmRelease
       name: '@Apocalyptic/ConfirmRelease'
@@ -231,15 +231,15 @@ x_Dist_Zilla:
     -
       class: Dist::Zilla::Plugin::Git::Commit
       name: '@Apocalyptic/Git::Commit'
-      version: 1.102810
+      version: 1.103470
     -
       class: Dist::Zilla::Plugin::Git::Tag
       name: '@Apocalyptic/Git::Tag'
-      version: 1.102810
+      version: 1.103470
     -
       class: Dist::Zilla::Plugin::Git::Push
       name: '@Apocalyptic/Git::Push'
-      version: 1.102810
+      version: 1.103470
     -
       class: Dist::Zilla::Plugin::FinderCode
       name: ':InstallModules'

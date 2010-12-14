@@ -2,6 +2,56 @@
 9999-99-99 99:99:99 +0000 HEAD
 ==============================
 
+  commit 66cdf5228bd35acc68097fb2960d0bb22a256b5c
+  Author: Apocalypse <perl@0ne.us>
+  Date:   Mon Dec 13 18:29:48 2010 -0700
+  
+    tweak example dist.ini
+
+  commit 23a502971c1534374f09184d989fe3581a7d5eee
+  Author: Apocalypse <perl@0ne.us>
+  Date:   Mon Dec 13 17:28:02 2010 -0700
+  
+    tweak POD
+
+  commit 15a6fc37db8e290d925e9a47a2071304b0bb4b1f
+  Author: Apocalypse <perl@0ne.us>
+  Date:   Mon Dec 13 15:36:51 2010 -0700
+  
+    add do_munging attr at request of FLORA, thanks
+
+  commit 4550bf0bf5855dfc471cfb55b4cb053a53bd2913
+  Author: Apocalypse <perl@0ne.us>
+  Date:   Tue Dec 7 19:47:49 2010 -0700
+  
+    new release tarball 
+
+=======================================
+2010-12-07 19:36:19 -0700 release-1.001
+=======================================
+
+  commit be86aade505b21c843e179791051e2fdc00c6712
+  Author: Apocalypse <perl@0ne.us>
+  Date:   Tue Dec 7 19:36:19 2010 -0700
+  
+    New CPAN release of Dist-Zilla-Plugin-Authority - v1.001
+
+    Released: 2010-12-08 02:36:12 UTC
+
+    Updated to require Dist::Zilla v4 ( so we can access the %PAUSE stash
+    )
+
+    The "authority" attr is not required anymore ( defaults to the %PAUSE
+    username )
+
+    Backported some code from Dist::Zilla::Plugin::PkgVersion v4 ( as
+    usual, thanks RJBS )
+
+    Add $AUTHORITY to script files too ( if they have a package
+    declaration )
+
+    Make do_metadata default to true ( thanks FLORA )
+
   commit e6a747e42f296aacd7e39e83502894e86ce1d920
   Author: Apocalypse <perl@0ne.us>
   Date:   Tue Dec 7 18:25:03 2010 -0700

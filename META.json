@@ -52,7 +52,7 @@
    "provides" : {
       "Dist::Zilla::Plugin::Authority" : {
          "file" : "lib/Dist/Zilla/Plugin/Authority.pm",
-         "version" : "1.001"
+         "version" : "1.002"
       }
    },
    "release_status" : "stable",
@@ -71,7 +71,7 @@
          "web" : "http://github.com/apocalypse/perl-dist-zilla-plugin-authority"
       }
    },
-   "version" : "1.001",
+   "version" : "1.002",
    "x_BuiltWith" : {
       "modules" : {
          "Dist::Zilla::Role::FileFinderUser" : "4.102345",
@@ -103,7 +103,7 @@
          {
             "class" : "Dist::Zilla::Plugin::Git::NextVersion",
             "name" : "@Apocalyptic/Git::NextVersion",
-            "version" : "1.102810"
+            "version" : "1.103470"
          },
          {
             "class" : "Dist::Zilla::Plugin::GatherDir",
@@ -178,7 +178,7 @@
          {
             "class" : "Dist::Zilla::Plugin::MinimumPerl",
             "name" : "@Apocalyptic/MinimumPerl",
-            "version" : "1.000"
+            "version" : "1.001"
          },
          {
             "class" : "Dist::Zilla::Plugin::Bugtracker",
@@ -292,7 +292,7 @@
          {
             "class" : "Dist::Zilla::Plugin::Git::Check",
             "name" : "@Apocalyptic/Git::Check",
-            "version" : "1.102810"
+            "version" : "1.103470"
          },
          {
             "class" : "Dist::Zilla::Plugin::ConfirmRelease",
@@ -312,17 +312,17 @@
          {
             "class" : "Dist::Zilla::Plugin::Git::Commit",
             "name" : "@Apocalyptic/Git::Commit",
-            "version" : "1.102810"
+            "version" : "1.103470"
          },
          {
             "class" : "Dist::Zilla::Plugin::Git::Tag",
             "name" : "@Apocalyptic/Git::Tag",
-            "version" : "1.102810"
+            "version" : "1.103470"
          },
          {
             "class" : "Dist::Zilla::Plugin::Git::Push",
             "name" : "@Apocalyptic/Git::Push",
-            "version" : "1.102810"
+            "version" : "1.103470"
          },
          {
             "class" : "Dist::Zilla::Plugin::FinderCode",

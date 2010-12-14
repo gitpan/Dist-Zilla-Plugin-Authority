@@ -2,24 +2,27 @@ NAME
     Dist::Zilla::Plugin::Authority - Add an $AUTHORITY to your packages
 
 VERSION
-      This document describes v1.001 of Dist::Zilla::Plugin::Authority - released December 07, 2010 as part of Dist-Zilla-Plugin-Authority.
+      This document describes v1.002 of Dist::Zilla::Plugin::Authority - released December 13, 2010 as part of Dist-Zilla-Plugin-Authority.
 
 DESCRIPTION
-    This plugin adds the $AUTHORITY marker to your packages. Also, it can
-    add the authority information to the metadata, if requested.
+    This plugin adds the authority data to your distribution. It adds the
+    data to your modules and metadata. Normally it looks for the PAUSE
+    author id in your Dist::Zilla configuration. If you want to override it,
+    please use the 'authority' attribute.
 
             # In your dist.ini:
             [Authority]
-            authority = cpan:APOCAL
-            do_metadata = 1
 
-    The resulting hunk of code would look something like this:
+    This code will be added to any package declarations in your perl files:
 
             BEGIN {
               $Dist::Zilla::Plugin::Authority::AUTHORITY = 'cpan:APOCAL';
             }
 
-    This code will be added to any package declarations in your perl files.
+    Your metadata ( META.yml or META.json ) will have an entry looking like
+    this:
+
+            x_authority => 'cpan:APOCAL'
 
 ATTRIBUTES
   authority
@@ -31,13 +34,15 @@ ATTRIBUTES
 
   do_metadata
     A boolean value to control if the authority should be added to the
-    metadata. ( META.yml or META.json )
+    metadata.
 
     Defaults to true.
 
-    The metadata will look like this:
+  do_munging
+    A boolean value to control if the $AUTHORITY variable should be added to
+    the modules.
 
-            x_authority => 'cpan:APOCAL'
+    Defaults to true.
 
 SEE ALSO
     *   Dist::Zilla
@@ -52,6 +57,10 @@ SUPPORT
       perldoc Dist::Zilla::Plugin::Authority
 
   Websites
+    The following websites have more information about this module, and may
+    be of help to you. As always, in addition to those websites please use
+    your favorite search engine to discover more resources.
+
     *   Search CPAN
 
         <http://search.cpan.org/dist/Dist-Zilla-Plugin-Authority>
@@ -85,8 +94,30 @@ SUPPORT
 
         <http://matrix.cpantesters.org/?dist=Dist-Zilla-Plugin-Authority>
 
-  Bugs
-    Please report any bugs or feature requests to
+  Internet Relay Chat
+    You can get live help by using IRC ( Internet Relay Chat ). If you don't
+    know what IRC is, please read this excellent guide:
+    <http://en.wikipedia.org/wiki/Internet_Relay_Chat>. Please be courteous
+    and patient when talking to us, as we might be busy or sleeping! You can
+    join those networks/channels and get help:
+
+    *   irc.perl.org
+
+        You can connect to the server at 'irc.perl.org' and join this
+        channel: #perl-help then talk to this person for help: Apocalypse.
+
+    *   irc.freenode.net
+
+        You can connect to the server at 'irc.freenode.net' and join this
+        channel: #perl then talk to this person for help: Apocal.
+
+    *   irc.efnet.org
+
+        You can connect to the server at 'irc.efnet.org' and join this
+        channel: #perl then talk to this person for help: Ap0cal.
+
+  Bugs / Feature Requests
+    Please report any bugs or feature requests by email to
     "bug-dist-zilla-plugin-authority at rt.cpan.org", or through the web
     interface at
     <http://rt.cpan.org/NoAuth/ReportBug.html?Queue=Dist-Zilla-Plugin-Author
