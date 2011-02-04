@@ -1,8 +1,9 @@
 NAME
-    Dist::Zilla::Plugin::Authority - Add an $AUTHORITY to your packages
+    Dist::Zilla::Plugin::Authority - Add the $AUTHORITY variable and
+    metadata to your distribution
 
 VERSION
-      This document describes v1.002 of Dist::Zilla::Plugin::Authority - released December 13, 2010 as part of Dist-Zilla-Plugin-Authority.
+      This document describes v1.003 of Dist::Zilla::Plugin::Authority - released February 04, 2011 as part of Dist-Zilla-Plugin-Authority.
 
 DESCRIPTION
     This plugin adds the authority data to your distribution. It adds the
@@ -32,6 +33,9 @@ ATTRIBUTES
     Defaults to the username set in the %PAUSE stash in the global
     config.ini or dist.ini ( Dist::Zilla v4 addition! )
 
+    If you prefer to not put it in config/dist.ini you can put it in
+    "~/.pause" just like Dist::Zilla did before v4.
+
   do_metadata
     A boolean value to control if the authority should be added to the
     metadata.
@@ -45,6 +49,9 @@ ATTRIBUTES
     Defaults to true.
 
 SEE ALSO
+    Please see those modules/websites for more information related to this
+    module.
+
     *   Dist::Zilla
 
     *   <http://www.perlmonks.org/?node_id=694377>
@@ -52,6 +59,7 @@ SEE ALSO
     *   <http://perlcabal.org/syn/S11.html#Versioning>
 
 SUPPORT
+  Perldoc
     You can find documentation for this module with the perldoc command.
 
       perldoc Dist::Zilla::Plugin::Authority
@@ -94,6 +102,10 @@ SUPPORT
 
         <http://matrix.cpantesters.org/?dist=Dist-Zilla-Plugin-Authority>
 
+  Email
+    You can email the author of this module at "APOCAL at cpan.org" asking
+    for help with any problems you have.
+
   Internet Relay Chat
     You can get live help by using IRC ( Internet Relay Chat ). If you don't
     know what IRC is, please read this excellent guide:
@@ -121,8 +133,8 @@ SUPPORT
     "bug-dist-zilla-plugin-authority at rt.cpan.org", or through the web
     interface at
     <http://rt.cpan.org/NoAuth/ReportBug.html?Queue=Dist-Zilla-Plugin-Author
-    ity>. I will be notified, and then you'll automatically be notified of
-    progress on your bug as I make changes.
+    ity>. You will be automatically notified of any progress on the request
+    by the system.
 
   Source Code
     The code is open to the world, and available for you to hack on. Please
@@ -144,7 +156,7 @@ ACKNOWLEDGEMENTS
     Props goes out to FLORA for prodding me to improve this module!
 
 COPYRIGHT AND LICENSE
-    This software is copyright (c) 2010 by Apocalypse.
+    This software is copyright (c) 2011 by Apocalypse.
 
     This is free software; you can redistribute it and/or modify it under
     the same terms as the Perl 5 programming language system itself.

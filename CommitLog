@@ -2,6 +2,33 @@
 9999-99-99 99:99:99 +0000 HEAD
 ==============================
 
+  commit 0bc0c5b809bf61e481f9dcd4c2bc76d8302b7280
+  Author: Apocalypse <perl@0ne.us>
+  Date:   Fri Feb 4 00:12:41 2011 -0700
+  
+    add ability to read from ~/.pause
+
+  commit 4dba562ac671050c7138e1339c7f0c43305f8161
+  Author: Apocalypse <perl@0ne.us>
+  Date:   Thu Dec 16 18:04:33 2010 -0700
+  
+    tweak abstract wording 
+
+=======================================
+2010-12-13 18:32:24 -0700 release-1.002
+=======================================
+
+  commit 392c7109b7a901b39284e0a0b3924bf2b81895d8
+  Author: Apocalypse <perl@0ne.us>
+  Date:   Mon Dec 13 18:32:24 2010 -0700
+  
+    New CPAN release of Dist-Zilla-Plugin-Authority - v1.002
+
+    Released: 2010-12-14 01:32:18 UTC
+
+    Added the "do_munging" attr to control the variable declarations in
+    packages ( thanks FLORA )
+
   commit 66cdf5228bd35acc68097fb2960d0bb22a256b5c
   Author: Apocalypse <perl@0ne.us>
   Date:   Mon Dec 13 18:29:48 2010 -0700

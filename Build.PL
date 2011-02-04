@@ -15,12 +15,12 @@ my %module_build_args = (
   'configure_requires' => {
     'Module::Build' => '0.3601'
   },
-  'dist_abstract' => 'Add an $AUTHORITY to your packages',
+  'dist_abstract' => 'Add the $AUTHORITY variable and metadata to your distribution',
   'dist_author' => [
     'Apocalypse <APOCAL@cpan.org>'
   ],
   'dist_name' => 'Dist-Zilla-Plugin-Authority',
-  'dist_version' => '1.002',
+  'dist_version' => '1.003',
   'license' => 'perl',
   'module_name' => 'Dist::Zilla::Plugin::Authority',
   'recommends' => {},
@@ -29,6 +29,8 @@ my %module_build_args = (
     'Dist::Zilla::Role::FileFinderUser' => '4.102345',
     'Dist::Zilla::Role::FileMunger' => '4.102345',
     'Dist::Zilla::Role::MetaProvider' => '4.102345',
+    'File::HomeDir' => '0',
+    'File::Spec' => '0',
     'Moose' => '1.03',
     'Moose::Util::TypeConstraints' => '1.01',
     'PPI' => '1.206',

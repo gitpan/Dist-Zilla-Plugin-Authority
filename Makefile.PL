@@ -9,7 +9,7 @@ use ExtUtils::MakeMaker 6.31;
 
 
 my %WriteMakefileArgs = (
-  'ABSTRACT' => 'Add an $AUTHORITY to your packages',
+  'ABSTRACT' => 'Add the $AUTHORITY variable and metadata to your distribution',
   'AUTHOR' => 'Apocalypse <APOCAL@cpan.org>',
   'BUILD_REQUIRES' => {
     'File::Find' => '0',
@@ -28,11 +28,13 @@ my %WriteMakefileArgs = (
     'Dist::Zilla::Role::FileFinderUser' => '4.102345',
     'Dist::Zilla::Role::FileMunger' => '4.102345',
     'Dist::Zilla::Role::MetaProvider' => '4.102345',
+    'File::HomeDir' => '0',
+    'File::Spec' => '0',
     'Moose' => '1.03',
     'Moose::Util::TypeConstraints' => '1.01',
     'PPI' => '1.206'
   },
-  'VERSION' => '1.002',
+  'VERSION' => '1.003',
   'test' => {
     'TESTS' => 't/*.t'
   }

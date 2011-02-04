@@ -1,5 +1,5 @@
 ---
-abstract: 'Add an $AUTHORITY to your packages'
+abstract: 'Add the $AUTHORITY variable and metadata to your distribution'
 author:
   - 'Apocalypse <APOCAL@cpan.org>'
 build_requires:
@@ -23,11 +23,13 @@ no_index:
 provides:
   Dist::Zilla::Plugin::Authority:
     file: lib/Dist/Zilla/Plugin/Authority.pm
-    version: 1.002
+    version: 1.003
 requires:
   Dist::Zilla::Role::FileFinderUser: 4.102345
   Dist::Zilla::Role::FileMunger: 4.102345
   Dist::Zilla::Role::MetaProvider: 4.102345
+  File::HomeDir: 0
+  File::Spec: 0
   Moose: 1.03
   Moose::Util::TypeConstraints: 1.01
   PPI: 1.206
@@ -37,13 +39,15 @@ resources:
   homepage: http://search.cpan.org/dist/Dist-Zilla-Plugin-Authority/
   license: http://dev.perl.org/licenses/
   repository: git://github.com/apocalypse/perl-dist-zilla-plugin-authority.git
-version: 1.002
+version: 1.003
 x_BuiltWith:
   modules:
     Dist::Zilla::Role::FileFinderUser: 4.102345
     Dist::Zilla::Role::FileMunger: 4.102345
     Dist::Zilla::Role::MetaProvider: 4.102345
     File::Find: 1.12
+    File::HomeDir: 0.93
+    File::Spec: 3.33
     File::Temp: 0.22
     Module::Build: 0.3607
     Moose: 1.21
@@ -105,7 +109,7 @@ x_Dist_Zilla:
     -
       class: Dist::Zilla::Plugin::Authority
       name: '@Apocalyptic/Authority'
-      version: 1.001
+      version: 1.003
     -
       class: Dist::Zilla::Plugin::PkgVersion
       name: '@Apocalyptic/PkgVersion'
@@ -183,7 +187,7 @@ x_Dist_Zilla:
     -
       class: Dist::Zilla::Plugin::DualBuilders
       name: '@Apocalyptic/DualBuilders'
-      version: 0.03
+      version: 1.001
     -
       class: Dist::Zilla::Plugin::MetaYAML
       name: '@Apocalyptic/MetaYAML'
@@ -221,8 +225,8 @@ x_Dist_Zilla:
       name: '@Apocalyptic/ConfirmRelease'
       version: 4.102345
     -
-      class: Dist::Zilla::Plugin::FakeRelease
-      name: '@Apocalyptic/FakeRelease'
+      class: Dist::Zilla::Plugin::UploadToCPAN
+      name: '@Apocalyptic/UploadToCPAN'
       version: 4.102345
     -
       class: Dist::Zilla::Plugin::ArchiveRelease

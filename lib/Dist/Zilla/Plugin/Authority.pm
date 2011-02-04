@@ -1,24 +1,26 @@
 #
 # This file is part of Dist-Zilla-Plugin-Authority
 #
-# This software is copyright (c) 2010 by Apocalypse.
+# This software is copyright (c) 2011 by Apocalypse.
 #
 # This is free software; you can redistribute it and/or modify it under
 # the same terms as the Perl 5 programming language system itself.
 #
-use strict; use warnings;
+use strict; use warnings FATAL => 'all';
 package Dist::Zilla::Plugin::Authority;
 BEGIN {
-  $Dist::Zilla::Plugin::Authority::VERSION = '1.002';
+  $Dist::Zilla::Plugin::Authority::VERSION = '1.003';
 }
 BEGIN {
   $Dist::Zilla::Plugin::Authority::AUTHORITY = 'cpan:APOCAL';
 }
 
-# ABSTRACT: Add an $AUTHORITY to your packages
+# ABSTRACT: Add the $AUTHORITY variable and metadata to your distribution
 
 use Moose 1.03;
 use PPI 1.206;
+use File::Spec;
+use File::HomeDir;
 
 with(
 	'Dist::Zilla::Role::MetaProvider' => { -version => '4.102345' },
@@ -43,12 +45,28 @@ with(
 		default => sub {
 			my $self = shift;
 			my $stash = $self->zilla->stash_named( '%PAUSE' );
-			if ( ! defined $stash ) {
-				$self->log_fatal( 'PAUSE credentials not set in config.ini/dist.ini! Please set it or specify an authority for this plugin.' );
+			if ( defined $stash ) {
+				$self->log_debug( [ 'using PAUSE id "%s" for AUTHORITY from Dist::Zilla config', uc( $stash->username ) ] );
+				return 'cpan:' . uc( $stash->username );
+			} else {
+				# Argh, try the .pause file?
+				# Code ripped off from Dist::Zilla::Plugin::UploadToCPAN v4.200001 - thanks RJBS!
+				my $file = File::Spec->catfile( File::HomeDir->my_home, '.pause' );
+				if ( -f $file ) {
+					open my $fh, '<', $file or $self->log_fatal( "Unable to open $file - $!" );
+					while (<$fh>) {
+						next if /^\s*(?:#.*)?$/;
+						my ( $k, $v ) = /^\s*(\w+)\s+(.+)$/;
+						if ( $k =~ /^user$/i ) {
+							$self->log_debug( [ 'using PAUSE id "%s" for AUTHORITY from ~/.pause', uc( $v ) ] );
+							return 'cpan:' . uc( $v );
+						}
+					}
+					$self->log_fatal( 'PAUSE user not found in ~/.pause' );
+				} else {
+					$self->log_fatal( 'PAUSE credentials not found in "config.ini" or "dist.ini" or "~/.pause"! Please set it or specify an authority for this plugin.' );
+				}
 			}
-
-			$self->log_debug( [ 'using PAUSE id "%s" for AUTHORITY', $stash->username ] );
-			return 'cpan:' . $stash->username;
 		},
 	);
 
@@ -156,15 +174,15 @@ __END__
 
 =for Pod::Coverage metadata munge_files
 
-=for :stopwords RJBS metadata FLORA dist ini json username yml
+=for stopwords RJBS metadata FLORA dist ini json username yml
 
 =head1 NAME
 
-Dist::Zilla::Plugin::Authority - Add an $AUTHORITY to your packages
+Dist::Zilla::Plugin::Authority - Add the $AUTHORITY variable and metadata to your distribution
 
 =head1 VERSION
 
-  This document describes v1.002 of Dist::Zilla::Plugin::Authority - released December 13, 2010 as part of Dist-Zilla-Plugin-Authority.
+  This document describes v1.003 of Dist::Zilla::Plugin::Authority - released February 04, 2011 as part of Dist-Zilla-Plugin-Authority.
 
 =head1 DESCRIPTION
 
@@ -193,6 +211,8 @@ The authority you want to use. It should be something like C<cpan:APOCAL>.
 
 Defaults to the username set in the %PAUSE stash in the global config.ini or dist.ini ( Dist::Zilla v4 addition! )
 
+If you prefer to not put it in config/dist.ini you can put it in "~/.pause" just like Dist::Zilla did before v4.
+
 =head2 do_metadata
 
 A boolean value to control if the authority should be added to the metadata.
@@ -206,6 +226,8 @@ A boolean value to control if the $AUTHORITY variable should be added to the mod
 Defaults to true.
 
 =head1 SEE ALSO
+
+Please see those modules/websites for more information related to this module.
 
 =over 4
 
@@ -223,9 +245,11 @@ L<http://perlcabal.org/syn/S11.html#Versioning>
 
 =back
 
-=for :stopwords CPAN AnnoCPAN RT CPANTS Kwalitee diff IRC
+=for :stopwords cpan testmatrix url annocpan anno bugtracker rt cpants kwalitee diff irc mailto metadata placeholders
 
 =head1 SUPPORT
+
+=head2 Perldoc
 
 You can find documentation for this module with the perldoc command.
 
@@ -288,6 +312,10 @@ L<http://matrix.cpantesters.org/?dist=Dist-Zilla-Plugin-Authority>
 
 =back
 
+=head2 Email
+
+You can email the author of this module at C<APOCAL at cpan.org> asking for help with any problems you have.
+
 =head2 Internet Relay Chat
 
 You can get live help by using IRC ( Internet Relay Chat ). If you don't know what IRC is,
@@ -320,8 +348,8 @@ You can connect to the server at 'irc.efnet.org' and join this channel: #perl th
 =head2 Bugs / Feature Requests
 
 Please report any bugs or feature requests by email to C<bug-dist-zilla-plugin-authority at rt.cpan.org>, or through
-the web interface at L<http://rt.cpan.org/NoAuth/ReportBug.html?Queue=Dist-Zilla-Plugin-Authority>.  I will be
-notified, and then you'll automatically be notified of progress on your bug as I make changes.
+the web interface at L<http://rt.cpan.org/NoAuth/ReportBug.html?Queue=Dist-Zilla-Plugin-Authority>. You will be automatically notified of any
+progress on the request by the system.
 
 =head2 Source Code
 
@@ -345,7 +373,7 @@ Props goes out to FLORA for prodding me to improve this module!
 
 =head1 COPYRIGHT AND LICENSE
 
-This software is copyright (c) 2010 by Apocalypse.
+This software is copyright (c) 2011 by Apocalypse.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.
