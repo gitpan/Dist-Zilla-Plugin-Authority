@@ -6,10 +6,10 @@
 # This is free software; you can redistribute it and/or modify it under
 # the same terms as the Perl 5 programming language system itself.
 #
-use strict; use warnings FATAL => 'all';
+use strict; use warnings;
 package Dist::Zilla::Plugin::Authority;
 BEGIN {
-  $Dist::Zilla::Plugin::Authority::VERSION = '1.003';
+  $Dist::Zilla::Plugin::Authority::VERSION = '1.004';
 }
 BEGIN {
   $Dist::Zilla::Plugin::Authority::AUTHORITY = 'cpan:APOCAL';
@@ -38,7 +38,7 @@ with(
 	has authority => (
 		is => 'ro',
 		isa => subtype( 'Str'
-			=> where { $_ =~ /^\w+\:\w+$/ }
+			=> where { $_ =~ /^\w+\:\S+$/ }
 			=> message { "Authority must be in the form of 'cpan:PAUSEID'" }
 		),
 		lazy => 1,
@@ -182,7 +182,7 @@ Dist::Zilla::Plugin::Authority - Add the $AUTHORITY variable and metadata to you
 
 =head1 VERSION
 
-  This document describes v1.003 of Dist::Zilla::Plugin::Authority - released February 04, 2011 as part of Dist-Zilla-Plugin-Authority.
+  This document describes v1.004 of Dist::Zilla::Plugin::Authority - released February 21, 2011 as part of Dist-Zilla-Plugin-Authority.
 
 =head1 DESCRIPTION
 

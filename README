@@ -3,7 +3,7 @@ NAME
     metadata to your distribution
 
 VERSION
-      This document describes v1.003 of Dist::Zilla::Plugin::Authority - released February 04, 2011 as part of Dist-Zilla-Plugin-Authority.
+      This document describes v1.004 of Dist::Zilla::Plugin::Authority - released February 21, 2011 as part of Dist-Zilla-Plugin-Authority.
 
 DESCRIPTION
     This plugin adds the authority data to your distribution. It adds the

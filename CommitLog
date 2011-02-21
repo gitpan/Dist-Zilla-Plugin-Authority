@@ -2,6 +2,46 @@
 9999-99-99 99:99:99 +0000 HEAD
 ==============================
 
+  commit ad09ec604834c23de1bb1a7d3a8d62dfe5b746cb
+  Merge: ed81d7f ac2f705
+  Author: Apocalypse <perl@0ne.us>
+  Date:   Mon Feb 21 10:49:50 2011 -0700
+  
+    Merge branch 'master' of
+    https://github.com/magnificent-tears/perl-dist-zilla-plugin-authority
+    into magnificent-tears-master
+
+  commit ac2f705fa8156e9f306071c4544605230942261b
+  Author: Randy Stauner <randy@magnificent-tears.com>
+  Date:   Tue Jan 18 16:26:56 2011 -0800
+  
+    Allow authority to contain any non-space character after the colon
+
+    This allows "Anything matching <alpha>+ \: \S+ is treated as an
+    author(ity)" as described in the "shorthand" section of
+    http://perlcabal.org/syn/S11.html#Versioning
+
+    Currently the "uri scheme" (the part before the colon) is not
+    restricted to alphabetic characters but allows any word characters to
+    maintain backward (and possibly forward) compatibility. 
+
+=======================================
+2011-02-04 00:24:59 -0700 release-1.003
+=======================================
+
+  commit ed81d7f032e25d9cab357726c0c5efe5e69fdaea
+  Author: Apocalypse <perl@0ne.us>
+  Date:   Fri Feb 4 00:24:59 2011 -0700
+  
+    New CPAN release of Dist-Zilla-Plugin-Authority - v1.003
+
+    Released: 2011-02-04 07:24:46 UTC
+
+    Tweaked the ABSTRACT section ( thanks FLORA + GETTY )
+
+    Add ability to read from ~/.pause file for the authority ( thanks
+    WOLVERIAN )
+
   commit 0bc0c5b809bf61e481f9dcd4c2bc76d8302b7280
   Author: Apocalypse <perl@0ne.us>
   Date:   Fri Feb 4 00:12:41 2011 -0700
