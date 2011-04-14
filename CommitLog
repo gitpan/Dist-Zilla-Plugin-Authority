@@ -2,6 +2,62 @@
 9999-99-99 99:99:99 +0000 HEAD
 ==============================
 
+  commit 6188cf26c29596abd8a8e4c840ede16bd303c214
+  Author: Apocalypse <perl@0ne.us>
+  Date:   Thu Apr 14 10:04:30 2011 -0700
+  
+    reformat some POD
+
+  commit 2037cab219b94d35698b60aae4695e603a813c02
+  Author: Apocalypse <perl@0ne.us>
+  Date:   Thu Apr 14 09:59:10 2011 -0700
+  
+    more tweaks
+
+  commit 5dc94aa3aa7865969e5254759105571413403ae1
+  Author: Apocalypse <perl@0ne.us>
+  Date:   Thu Apr 14 09:54:19 2011 -0700
+  
+    more tweaks to locate_comment logic
+
+  commit cd5156e262da782f01a5544508953a0fe49f2929
+  Author: Apocalypse <perl@0ne.us>
+  Date:   Thu Apr 14 09:25:18 2011 -0700
+  
+    style tweaks and some logging tweaks to the recent patch
+
+  commit e631d7026bd1cf970f30d8e3ddbce9fbfb644b99
+  Author: Nigel Metheringham <nigel.metheringham@dev.intechnology.co.uk>
+  Date:   Thu Apr 14 15:50:54 2011 +0100
+  
+    Implemented locate_comment which uses a comment to locate source
+    munge
+
+    A comment of the form
+
+    # AUTHORITY has
+
+    out $AUTHORITY = 'cpan:SOMEONE';
+
+    inserted before it on the same line.
+
+    This prevents the changes upsetting Perl::Critic etc 
+
+=======================================
+2011-02-21 10:55:38 -0700 release-1.004
+=======================================
+
+  commit 21d6c01df508391bd74a8753d810e719fb6b3b32
+  Author: Apocalypse <perl@0ne.us>
+  Date:   Mon Feb 21 10:55:38 2011 -0700
+  
+    New CPAN release of Dist-Zilla-Plugin-Authority - v1.004
+
+    Released: 2011-02-21 17:55:27 UTC
+
+    Tweak the authority regex to be a bit more liberal ( thanks
+    RWSTAUNER! )
+
   commit ad09ec604834c23de1bb1a7d3a8d62dfe5b746cb
   Merge: ed81d7f ac2f705
   Author: Apocalypse <perl@0ne.us>

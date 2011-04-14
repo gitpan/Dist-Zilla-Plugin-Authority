@@ -3,7 +3,7 @@ NAME
     metadata to your distribution
 
 VERSION
-      This document describes v1.004 of Dist::Zilla::Plugin::Authority - released February 21, 2011 as part of Dist-Zilla-Plugin-Authority.
+      This document describes v1.005 of Dist::Zilla::Plugin::Authority - released April 14, 2011 as part of Dist-Zilla-Plugin-Authority.
 
 DESCRIPTION
     This plugin adds the authority data to your distribution. It adds the
@@ -47,6 +47,16 @@ ATTRIBUTES
     the modules.
 
     Defaults to true.
+
+  locate_comment
+    A boolean value to control if the $AUTHORITY variable should be added
+    where a "# AUTHORITY" comment is found. If this is set then an
+    appropriate comment is found, and "our $AUTHORITY = 'cpan:PAUSEID';" is
+    inserted preceding the comment on the same line.
+
+    This basically implements what OurPkgVersion does for PkgVersion.
+
+    Defaults to false.
 
 SEE ALSO
     Please see those modules/websites for more information related to this
@@ -163,4 +173,26 @@ COPYRIGHT AND LICENSE
 
     The full text of the license can be found in the LICENSE file included
     with this distribution.
+
+DISCLAIMER OF WARRANTY
+    BECAUSE THIS SOFTWARE IS LICENSED FREE OF CHARGE, THERE IS NO WARRANTY
+    FOR THE SOFTWARE, TO THE EXTENT PERMITTED BY APPLICABLE LAW. EXCEPT WHEN
+    OTHERWISE STATED IN WRITING THE COPYRIGHT HOLDERS AND/OR OTHER PARTIES
+    PROVIDE THE SOFTWARE "AS IS" WITHOUT WARRANTY OF ANY KIND, EITHER
+    EXPRESSED OR IMPLIED, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+    WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE. THE
+    ENTIRE RISK AS TO THE QUALITY AND PERFORMANCE OF THE SOFTWARE IS WITH
+    YOU. SHOULD THE SOFTWARE PROVE DEFECTIVE, YOU ASSUME THE COST OF ALL
+    NECESSARY SERVICING, REPAIR, OR CORRECTION.
+
+    IN NO EVENT UNLESS REQUIRED BY APPLICABLE LAW OR AGREED TO IN WRITING
+    WILL ANY COPYRIGHT HOLDER, OR ANY OTHER PARTY WHO MAY MODIFY AND/OR
+    REDISTRIBUTE THE SOFTWARE AS PERMITTED BY THE ABOVE LICENCE, BE LIABLE
+    TO YOU FOR DAMAGES, INCLUDING ANY GENERAL, SPECIAL, INCIDENTAL, OR
+    CONSEQUENTIAL DAMAGES ARISING OUT OF THE USE OR INABILITY TO USE THE
+    SOFTWARE (INCLUDING BUT NOT LIMITED TO LOSS OF DATA OR DATA BEING
+    RENDERED INACCURATE OR LOSSES SUSTAINED BY YOU OR THIRD PARTIES OR A
+    FAILURE OF THE SOFTWARE TO OPERATE WITH ANY OTHER SOFTWARE), EVEN IF
+    SUCH HOLDER OR OTHER PARTY HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH
+    DAMAGES.
 

@@ -9,7 +9,7 @@
 use strict; use warnings;
 package Dist::Zilla::Plugin::Authority;
 BEGIN {
-  $Dist::Zilla::Plugin::Authority::VERSION = '1.004';
+  $Dist::Zilla::Plugin::Authority::VERSION = '1.005';
 }
 BEGIN {
   $Dist::Zilla::Plugin::Authority::AUTHORITY = 'cpan:APOCAL';
@@ -62,6 +62,7 @@ with(
 							return 'cpan:' . uc( $v );
 						}
 					}
+					close $fh or $self->log_fatal( "Unable to close $file - $!" );
 					$self->log_fatal( 'PAUSE user not found in ~/.pause' );
 				} else {
 					$self->log_fatal( 'PAUSE credentials not found in "config.ini" or "dist.ini" or "~/.pause"! Please set it or specify an authority for this plugin.' );
@@ -85,6 +86,13 @@ has do_munging => (
 	is => 'ro',
 	isa => 'Bool',
 	default => 1,
+);
+
+
+has locate_comment => (
+	is => 'ro',
+	isa => 'Bool',
+	default => 0,
 );
 
 sub metadata {
@@ -130,35 +138,58 @@ sub _munge_perl {
 		}
 	}
 
-	return unless my $package_stmts = $document->find('PPI::Statement::Package');
+	# Should we use the comment to insert the $AUTHORITY or the pkg declaration?
+	if ( $self->locate_comment ) {
+		my $comments = $document->find( 'PPI::Token::Comment' );
+		my $found_authority;
+		if ( ref $comments and ref( $comments ) eq 'ARRAY' ) {
+			foreach my $line ( @$comments ) {
+				if ( $line =~ /^(\s*)(\#\s+AUTHORITY\b)$/xms ) {
+					my ( $ws, $comment ) = ( $1, $2 );
+					my $perl = $ws . 'our $AUTHORITY = \'' . $self->authority . "'; $comment\n";
 
-	my %seen_pkgs;
-
-	for my $stmt ( @$package_stmts ) {
-		my $package = $stmt->namespace;
-
-		# Thanks to rafl ( Florian Ragwitz ) for this
-		if ( $seen_pkgs{ $package }++ ) {
-			$self->log( [ 'skipping package re-declaration for %s', $package ] );
-			next;
+					$self->log_debug( [ 'adding $AUTHORITY assignment to line %d in %s', $line->line_number, $file->name ] );
+					$line->set_content( $perl );
+					$found_authority = 1;
+				}
+			}
 		}
 
-		# Thanks to autarch ( Dave Rolsky ) for this
-		if ( $stmt->content =~ /package\s*(?:#.*)?\n\s*\Q$package/ ) {
-			$self->log([ 'skipping private package %s', $package ]);
-			next;
+		if ( ! $found_authority ) {
+			$self->log( [ 'skipping %s: consider adding a "# AUTHORITY" comment', $file->name ] );
+			return;
 		}
+	} else {
+		return unless my $package_stmts = $document->find( 'PPI::Statement::Package' );
 
-		# Same \x20 hack as seen in PkgVersion, blarh!
-		my $perl = "BEGIN {\n  \$$package\::AUTHORITY\x20=\x20'" . $self->authority . "';\n}\n";
-		my $doc = PPI::Document->new( \$perl );
-		my @children = $doc->schildren;
+		my %seen_pkgs;
 
-		$self->log_debug( [ 'adding $AUTHORITY assignment to %s in %s', $package, $file->name ] );
+		for my $stmt ( @$package_stmts ) {
+			my $package = $stmt->namespace;
 
-		Carp::carp( "error inserting AUTHORITY in " . $file->name )
-			unless $stmt->insert_after( $children[0]->clone )
-			and    $stmt->insert_after( PPI::Token::Whitespace->new("\n") );
+			# Thanks to rafl ( Florian Ragwitz ) for this
+			if ( $seen_pkgs{ $package }++ ) {
+				$self->log( [ 'skipping package re-declaration for %s', $package ] );
+				next;
+			}
+
+			# Thanks to autarch ( Dave Rolsky ) for this
+			if ( $stmt->content =~ /package\s*(?:#.*)?\n\s*\Q$package/ ) {
+				$self->log( [ 'skipping private package %s', $package ] );
+				next;
+			}
+
+			# Same \x20 hack as seen in PkgVersion, blarh!
+			my $perl = "BEGIN {\n  \$${package}::AUTHORITY\x20=\x20'" . $self->authority . "';\n}\n";
+			my $doc = PPI::Document->new( \$perl );
+			my @children = $doc->schildren;
+
+			$self->log_debug( [ 'adding $AUTHORITY assignment to %s in %s', $package, $file->name ] );
+
+			Carp::carp( "error inserting AUTHORITY in " . $file->name )
+				unless $stmt->insert_after( $children[0]->clone )
+				and    $stmt->insert_after( PPI::Token::Whitespace->new("\n") );
+		}
 	}
 
 	$file->content( $document->serialize );
@@ -172,9 +203,12 @@ __PACKAGE__->meta->make_immutable;
 __END__
 =pod
 
-=for Pod::Coverage metadata munge_files
+=for :stopwords Apocalypse cpan testmatrix url annocpan anno bugtracker rt cpants kwalitee
+diff irc mailto metadata placeholders RJBS FLORA dist ini json username yml
 
-=for stopwords RJBS metadata FLORA dist ini json username yml
+=encoding utf-8
+
+=for Pod::Coverage metadata munge_files
 
 =head1 NAME
 
@@ -182,7 +216,7 @@ Dist::Zilla::Plugin::Authority - Add the $AUTHORITY variable and metadata to you
 
 =head1 VERSION
 
-  This document describes v1.004 of Dist::Zilla::Plugin::Authority - released February 21, 2011 as part of Dist-Zilla-Plugin-Authority.
+  This document describes v1.005 of Dist::Zilla::Plugin::Authority - released April 14, 2011 as part of Dist-Zilla-Plugin-Authority.
 
 =head1 DESCRIPTION
 
@@ -225,6 +259,18 @@ A boolean value to control if the $AUTHORITY variable should be added to the mod
 
 Defaults to true.
 
+=head2 locate_comment
+
+A boolean value to control if the $AUTHORITY variable should be added where a
+C<# AUTHORITY> comment is found.  If this is set then an appropriate comment
+is found, and C<our $AUTHORITY = 'cpan:PAUSEID';> is inserted preceding the
+comment on the same line.
+
+This basically implements what L<OurPkgVersion|Dist::Zilla::Plugin::OurPkgVersion>
+does for L<PkgVersion|Dist::Zilla::Plugin::PkgVersion>.
+
+Defaults to false.
+
 =head1 SEE ALSO
 
 Please see those modules/websites for more information related to this module.
@@ -233,19 +279,17 @@ Please see those modules/websites for more information related to this module.
 
 =item *
 
-L<Dist::Zilla>
+L<Dist::Zilla|Dist::Zilla>
 
 =item *
 
-L<http://www.perlmonks.org/?node_id=694377>
+L<http://www.perlmonks.org/?node_id=694377|http://www.perlmonks.org/?node_id=694377>
 
 =item *
 
-L<http://perlcabal.org/syn/S11.html#Versioning>
+L<http://perlcabal.org/syn/S11.html#Versioning|http://perlcabal.org/syn/S11.html#Versioning>
 
 =back
-
-=for :stopwords cpan testmatrix url annocpan anno bugtracker rt cpants kwalitee diff irc mailto metadata placeholders
 
 =head1 SUPPORT
 
@@ -379,6 +423,29 @@ This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.
 
 The full text of the license can be found in the LICENSE file included with this distribution.
+
+=head1 DISCLAIMER OF WARRANTY
+
+BECAUSE THIS SOFTWARE IS LICENSED FREE OF CHARGE, THERE IS NO WARRANTY
+FOR THE SOFTWARE, TO THE EXTENT PERMITTED BY APPLICABLE LAW. EXCEPT
+WHEN OTHERWISE STATED IN WRITING THE COPYRIGHT HOLDERS AND/OR OTHER
+PARTIES PROVIDE THE SOFTWARE "AS IS" WITHOUT WARRANTY OF ANY KIND,
+EITHER EXPRESSED OR IMPLIED, INCLUDING, BUT NOT LIMITED TO, THE
+IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+PURPOSE. THE ENTIRE RISK AS TO THE QUALITY AND PERFORMANCE OF THE
+SOFTWARE IS WITH YOU. SHOULD THE SOFTWARE PROVE DEFECTIVE, YOU ASSUME
+THE COST OF ALL NECESSARY SERVICING, REPAIR, OR CORRECTION.
+
+IN NO EVENT UNLESS REQUIRED BY APPLICABLE LAW OR AGREED TO IN WRITING
+WILL ANY COPYRIGHT HOLDER, OR ANY OTHER PARTY WHO MAY MODIFY AND/OR
+REDISTRIBUTE THE SOFTWARE AS PERMITTED BY THE ABOVE LICENCE, BE LIABLE
+TO YOU FOR DAMAGES, INCLUDING ANY GENERAL, SPECIAL, INCIDENTAL, OR
+CONSEQUENTIAL DAMAGES ARISING OUT OF THE USE OR INABILITY TO USE THE
+SOFTWARE (INCLUDING BUT NOT LIMITED TO LOSS OF DATA OR DATA BEING
+RENDERED INACCURATE OR LOSSES SUSTAINED BY YOU OR THIRD PARTIES OR A
+FAILURE OF THE SOFTWARE TO OPERATE WITH ANY OTHER SOFTWARE), EVEN IF
+SUCH HOLDER OR OTHER PARTY HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH
+DAMAGES.
 
 =cut
 

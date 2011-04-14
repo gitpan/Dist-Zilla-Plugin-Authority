@@ -20,7 +20,7 @@ my %module_build_args = (
     'Apocalypse <APOCAL@cpan.org>'
   ],
   'dist_name' => 'Dist-Zilla-Plugin-Authority',
-  'dist_version' => '1.004',
+  'dist_version' => '1.005',
   'license' => 'perl',
   'module_name' => 'Dist::Zilla::Plugin::Authority',
   'recommends' => {},

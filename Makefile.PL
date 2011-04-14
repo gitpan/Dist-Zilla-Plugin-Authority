@@ -34,7 +34,7 @@ my %WriteMakefileArgs = (
     'Moose::Util::TypeConstraints' => '1.01',
     'PPI' => '1.206'
   },
-  'VERSION' => '1.004',
+  'VERSION' => '1.005',
   'test' => {
     'TESTS' => 't/*.t'
   }
