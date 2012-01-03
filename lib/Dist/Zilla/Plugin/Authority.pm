@@ -1,15 +1,15 @@
 #
 # This file is part of Dist-Zilla-Plugin-Authority
 #
-# This software is copyright (c) 2011 by Apocalypse.
+# This software is copyright (c) 2012 by Apocalypse.
 #
 # This is free software; you can redistribute it and/or modify it under
 # the same terms as the Perl 5 programming language system itself.
 #
 use strict; use warnings;
 package Dist::Zilla::Plugin::Authority;
-BEGIN {
-  $Dist::Zilla::Plugin::Authority::VERSION = '1.005';
+{
+  $Dist::Zilla::Plugin::Authority::VERSION = '1.006';
 }
 BEGIN {
   $Dist::Zilla::Plugin::Authority::AUTHORITY = 'cpan:APOCAL';
@@ -21,6 +21,7 @@ use Moose 1.03;
 use PPI 1.206;
 use File::Spec;
 use File::HomeDir;
+use Dist::Zilla::Util;
 
 with(
 	'Dist::Zilla::Role::MetaProvider' => { -version => '4.102345' },
@@ -29,6 +30,7 @@ with(
 		-version => '4.102345',
 		default_finders => [ ':InstallModules', ':ExecFiles' ],
 	},
+    'Dist::Zilla::Role::PPI' => { -version => '4.300001' },
 );
 
 
@@ -126,17 +128,12 @@ sub _munge_file {
 sub _munge_perl {
 	my( $self, $file ) = @_;
 
-	my $content = $file->content;
-	my $document = PPI::Document->new( \$content ) or Carp::croak( PPI::Document->errstr );
+    my $document = $self->ppi_document_for_file($file);
 
-	{
-		my $code_only = $document->clone;
-		$code_only->prune( "PPI::Token::$_" ) for qw( Comment Pod Quote Regexp );
-		if ( $code_only->serialize =~ /\$AUTHORITY\s*=/sm ) {
-			$self->log( [ 'skipping %s: assigns to $AUTHORITY', $file->name ] );
-			return;
-		}
-	}
+    if ( $self->document_assigns_to_variable( $document, '$AUTHORITY' ) ) {
+        $self->log( [ 'skipping %s: assigns to $AUTHORITY', $file->name ] );
+        return;
+    }
 
 	# Should we use the comment to insert the $AUTHORITY or the pkg declaration?
 	if ( $self->locate_comment ) {
@@ -192,7 +189,7 @@ sub _munge_perl {
 		}
 	}
 
-	$file->content( $document->serialize );
+    $self->save_ppi_document_to_file( $document, $file );
 }
 
 no Moose;
@@ -204,7 +201,8 @@ __END__
 =pod
 
 =for :stopwords Apocalypse cpan testmatrix url annocpan anno bugtracker rt cpants kwalitee
-diff irc mailto metadata placeholders RJBS FLORA dist ini json username yml
+diff irc mailto metadata placeholders metacpan RJBS FLORA dist ini json
+username yml
 
 =encoding utf-8
 
@@ -216,7 +214,7 @@ Dist::Zilla::Plugin::Authority - Add the $AUTHORITY variable and metadata to you
 
 =head1 VERSION
 
-  This document describes v1.005 of Dist::Zilla::Plugin::Authority - released April 14, 2011 as part of Dist-Zilla-Plugin-Authority.
+  This document describes v1.006 of Dist::Zilla::Plugin::Authority - released January 02, 2012 as part of Dist-Zilla-Plugin-Authority.
 
 =head1 DESCRIPTION
 
@@ -308,7 +306,17 @@ in addition to those websites please use your favorite search engine to discover
 
 =item *
 
+MetaCPAN
+
+A modern, open-source CPAN search engine, useful to view POD in HTML format.
+
+L<http://metacpan.org/release/Dist-Zilla-Plugin-Authority>
+
+=item *
+
 Search CPAN
+
+The default CPAN search engine, useful to view POD in HTML format.
 
 L<http://search.cpan.org/dist/Dist-Zilla-Plugin-Authority>
 
@@ -316,11 +324,15 @@ L<http://search.cpan.org/dist/Dist-Zilla-Plugin-Authority>
 
 RT: CPAN's Bug Tracker
 
+The RT ( Request Tracker ) website is the default bug/issue tracking system for CPAN.
+
 L<http://rt.cpan.org/NoAuth/Bugs.html?Dist=Dist-Zilla-Plugin-Authority>
 
 =item *
 
-AnnoCPAN: Annotated CPAN documentation
+AnnoCPAN
+
+The AnnoCPAN is a website that allows community annotations of Perl module documentation.
 
 L<http://annocpan.org/dist/Dist-Zilla-Plugin-Authority>
 
@@ -328,31 +340,49 @@ L<http://annocpan.org/dist/Dist-Zilla-Plugin-Authority>
 
 CPAN Ratings
 
+The CPAN Ratings is a website that allows community ratings and reviews of Perl modules.
+
 L<http://cpanratings.perl.org/d/Dist-Zilla-Plugin-Authority>
 
 =item *
 
 CPAN Forum
 
+The CPAN Forum is a web forum for discussing Perl modules.
+
 L<http://cpanforum.com/dist/Dist-Zilla-Plugin-Authority>
 
 =item *
 
-CPANTS Kwalitee
+CPANTS
+
+The CPANTS is a website that analyzes the Kwalitee ( code metrics ) of a distribution.
 
 L<http://cpants.perl.org/dist/overview/Dist-Zilla-Plugin-Authority>
 
 =item *
 
-CPAN Testers Results
+CPAN Testers
 
-L<http://cpantesters.org/distro/D/Dist-Zilla-Plugin-Authority.html>
+The CPAN Testers is a network of smokers who run automated tests on uploaded CPAN distributions.
+
+L<http://www.cpantesters.org/distro/D/Dist-Zilla-Plugin-Authority>
 
 =item *
 
 CPAN Testers Matrix
 
+The CPAN Testers Matrix is a website that provides a visual overview of the test results for a distribution on various Perls/platforms.
+
 L<http://matrix.cpantesters.org/?dist=Dist-Zilla-Plugin-Authority>
+
+=item *
+
+CPAN Testers Dependencies
+
+The CPAN Testers Dependencies is a website that shows a chart of the test results of all dependencies for a distribution.
+
+L<http://deps.cpantesters.org/?module=Dist::Zilla::Plugin::Authority>
 
 =back
 
@@ -417,35 +447,34 @@ Props goes out to FLORA for prodding me to improve this module!
 
 =head1 COPYRIGHT AND LICENSE
 
-This software is copyright (c) 2011 by Apocalypse.
+This software is copyright (c) 2012 by Apocalypse.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.
 
-The full text of the license can be found in the LICENSE file included with this distribution.
+The full text of the license can be found in the
+'LICENSE' file included with this distribution.
 
 =head1 DISCLAIMER OF WARRANTY
 
-BECAUSE THIS SOFTWARE IS LICENSED FREE OF CHARGE, THERE IS NO WARRANTY
-FOR THE SOFTWARE, TO THE EXTENT PERMITTED BY APPLICABLE LAW. EXCEPT
-WHEN OTHERWISE STATED IN WRITING THE COPYRIGHT HOLDERS AND/OR OTHER
-PARTIES PROVIDE THE SOFTWARE "AS IS" WITHOUT WARRANTY OF ANY KIND,
-EITHER EXPRESSED OR IMPLIED, INCLUDING, BUT NOT LIMITED TO, THE
-IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
-PURPOSE. THE ENTIRE RISK AS TO THE QUALITY AND PERFORMANCE OF THE
-SOFTWARE IS WITH YOU. SHOULD THE SOFTWARE PROVE DEFECTIVE, YOU ASSUME
-THE COST OF ALL NECESSARY SERVICING, REPAIR, OR CORRECTION.
+THERE IS NO WARRANTY FOR THE PROGRAM, TO THE EXTENT PERMITTED BY
+APPLICABLE LAW.  EXCEPT WHEN OTHERWISE STATED IN WRITING THE COPYRIGHT
+HOLDERS AND/OR OTHER PARTIES PROVIDE THE PROGRAM "AS IS" WITHOUT WARRANTY
+OF ANY KIND, EITHER EXPRESSED OR IMPLIED, INCLUDING, BUT NOT LIMITED TO,
+THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+PURPOSE.  THE ENTIRE RISK AS TO THE QUALITY AND PERFORMANCE OF THE PROGRAM
+IS WITH YOU.  SHOULD THE PROGRAM PROVE DEFECTIVE, YOU ASSUME THE COST OF
+ALL NECESSARY SERVICING, REPAIR OR CORRECTION.
 
 IN NO EVENT UNLESS REQUIRED BY APPLICABLE LAW OR AGREED TO IN WRITING
-WILL ANY COPYRIGHT HOLDER, OR ANY OTHER PARTY WHO MAY MODIFY AND/OR
-REDISTRIBUTE THE SOFTWARE AS PERMITTED BY THE ABOVE LICENCE, BE LIABLE
-TO YOU FOR DAMAGES, INCLUDING ANY GENERAL, SPECIAL, INCIDENTAL, OR
-CONSEQUENTIAL DAMAGES ARISING OUT OF THE USE OR INABILITY TO USE THE
-SOFTWARE (INCLUDING BUT NOT LIMITED TO LOSS OF DATA OR DATA BEING
-RENDERED INACCURATE OR LOSSES SUSTAINED BY YOU OR THIRD PARTIES OR A
-FAILURE OF THE SOFTWARE TO OPERATE WITH ANY OTHER SOFTWARE), EVEN IF
-SUCH HOLDER OR OTHER PARTY HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH
-DAMAGES.
+WILL ANY COPYRIGHT HOLDER, OR ANY OTHER PARTY WHO MODIFIES AND/OR CONVEYS
+THE PROGRAM AS PERMITTED ABOVE, BE LIABLE TO YOU FOR DAMAGES, INCLUDING ANY
+GENERAL, SPECIAL, INCIDENTAL OR CONSEQUENTIAL DAMAGES ARISING OUT OF THE
+USE OR INABILITY TO USE THE PROGRAM (INCLUDING BUT NOT LIMITED TO LOSS OF
+DATA OR DATA BEING RENDERED INACCURATE OR LOSSES SUSTAINED BY YOU OR THIRD
+PARTIES OR A FAILURE OF THE PROGRAM TO OPERATE WITH ANY OTHER PROGRAMS),
+EVEN IF SUCH HOLDER OR OTHER PARTY HAS BEEN ADVISED OF THE POSSIBILITY OF
+SUCH DAMAGES.
 
 =cut
 

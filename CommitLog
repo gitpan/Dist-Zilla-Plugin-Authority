@@ -1,35 +1,87 @@
-==============================
-9999-99-99 99:99:99 +0000 HEAD
-==============================
+==================================================
+Changes from 2011-01-03 00:00:00 +0000 to present.
+==================================================
 
-  commit 6188cf26c29596abd8a8e4c840ede16bd303c214
+------------------------------------------
+version 1.006 at 2012-01-03 04:14:31 +0000
+------------------------------------------
+
+  Change: 90e45eb8a3103dcf54e7871d994978106feb6e38
   Author: Apocalypse <perl@0ne.us>
-  Date:   Thu Apr 14 10:04:30 2011 -0700
-  
-    reformat some POD
+  Date : 2012-01-02 20:10:08 +0000
 
-  commit 2037cab219b94d35698b60aae4695e603a813c02
+    Merge pull request #4 from autarch/master
+
+    This makes this plugin a fair bit faster, especially when dealing
+    with many module files 
+
+  Change: 82ac3f6b615c07f9d0b60f4d4aa3ad9956816505
+  Author: Dave Rolsky <autarch@urth.org>
+  Date : 2011-09-19 15:13:32 +0000
+
+    Doh, typo 
+
+  Change: c37a2259bbd7443f6b810f9f537a9bc7dcc12237
+  Author: Dave Rolsky <autarch@urth.org>
+  Date : 2011-09-19 14:59:10 +0000
+
+    Put version requirement in code 
+
+  Change: 7f02443b8ee4889a6a286581cedfde8d31f6c730
+  Author: Dave Rolsky <autarch@urth.org>
+  Date : 2011-09-19 14:57:49 +0000
+
+    Changes for PPI 
+
+  Change: 37fe049cfa69d62da312ace4566399c9843f6b34
+  Author: Dave Rolsky <autarch@urth.org>
+  Date : 2011-09-19 14:56:43 +0000
+
+    Use new DZIL::Role::PPI to speed up PPI operations 
+
+------------------------------------------
+version 1.005 at 2011-04-14 17:05:44 +0000
+------------------------------------------
+
+  Change: cfa23ed68fe47b3ec9ac69ef2823ddd411b8980b
   Author: Apocalypse <perl@0ne.us>
-  Date:   Thu Apr 14 09:59:10 2011 -0700
-  
-    more tweaks
+  Date : 2011-04-14 10:05:44 +0000
 
-  commit 5dc94aa3aa7865969e5254759105571413403ae1
+    New CPAN release of Dist-Zilla-Plugin-Authority - v1.005
+
+    Released: 2011-04-14 17:05:17 UTC
+
+    Added locate_comment which finds a # AUTHORITY comment and puts
+    authority there ( thanks NIGELM! ) 
+
+  Change: 6188cf26c29596abd8a8e4c840ede16bd303c214
   Author: Apocalypse <perl@0ne.us>
-  Date:   Thu Apr 14 09:54:19 2011 -0700
-  
-    more tweaks to locate_comment logic
+  Date : 2011-04-14 10:04:30 +0000
 
-  commit cd5156e262da782f01a5544508953a0fe49f2929
+    reformat some POD 
+
+  Change: 2037cab219b94d35698b60aae4695e603a813c02
   Author: Apocalypse <perl@0ne.us>
-  Date:   Thu Apr 14 09:25:18 2011 -0700
-  
-    style tweaks and some logging tweaks to the recent patch
+  Date : 2011-04-14 09:59:10 +0000
 
-  commit e631d7026bd1cf970f30d8e3ddbce9fbfb644b99
+    more tweaks 
+
+  Change: 5dc94aa3aa7865969e5254759105571413403ae1
+  Author: Apocalypse <perl@0ne.us>
+  Date : 2011-04-14 09:54:19 +0000
+
+    more tweaks to locate_comment logic 
+
+  Change: cd5156e262da782f01a5544508953a0fe49f2929
+  Author: Apocalypse <perl@0ne.us>
+  Date : 2011-04-14 09:25:18 +0000
+
+    style tweaks and some logging tweaks to the recent patch 
+
+  Change: e631d7026bd1cf970f30d8e3ddbce9fbfb644b99
   Author: Nigel Metheringham <nigel.metheringham@dev.intechnology.co.uk>
-  Date:   Thu Apr 14 15:50:54 2011 +0100
-  
+  Date : 2011-04-14 15:50:54 +0000
+
     Implemented locate_comment which uses a comment to locate source
     munge
 
@@ -43,34 +95,33 @@
 
     This prevents the changes upsetting Perl::Critic etc 
 
-=======================================
-2011-02-21 10:55:38 -0700 release-1.004
-=======================================
+------------------------------------------
+version 1.004 at 2011-02-21 17:55:38 +0000
+------------------------------------------
 
-  commit 21d6c01df508391bd74a8753d810e719fb6b3b32
+  Change: 21d6c01df508391bd74a8753d810e719fb6b3b32
   Author: Apocalypse <perl@0ne.us>
-  Date:   Mon Feb 21 10:55:38 2011 -0700
-  
+  Date : 2011-02-21 10:55:38 +0000
+
     New CPAN release of Dist-Zilla-Plugin-Authority - v1.004
 
     Released: 2011-02-21 17:55:27 UTC
 
     Tweak the authority regex to be a bit more liberal ( thanks
-    RWSTAUNER! )
+    RWSTAUNER! ) 
 
-  commit ad09ec604834c23de1bb1a7d3a8d62dfe5b746cb
-  Merge: ed81d7f ac2f705
+  Change: ad09ec604834c23de1bb1a7d3a8d62dfe5b746cb
   Author: Apocalypse <perl@0ne.us>
-  Date:   Mon Feb 21 10:49:50 2011 -0700
-  
+  Date : 2011-02-21 10:49:50 +0000
+
     Merge branch 'master' of
     https://github.com/magnificent-tears/perl-dist-zilla-plugin-authority
-    into magnificent-tears-master
+    into magnificent-tears-master 
 
-  commit ac2f705fa8156e9f306071c4544605230942261b
+  Change: ac2f705fa8156e9f306071c4544605230942261b
   Author: Randy Stauner <randy@magnificent-tears.com>
-  Date:   Tue Jan 18 16:26:56 2011 -0800
-  
+  Date : 2011-01-18 16:26:56 +0000
+
     Allow authority to contain any non-space character after the colon
 
     This allows "Anything matching <alpha>+ \: \S+ is treated as an
@@ -81,14 +132,14 @@
     restricted to alphabetic characters but allows any word characters to
     maintain backward (and possibly forward) compatibility. 
 
-=======================================
-2011-02-04 00:24:59 -0700 release-1.003
-=======================================
+------------------------------------------
+version 1.003 at 2011-02-04 07:24:59 +0000
+------------------------------------------
 
-  commit ed81d7f032e25d9cab357726c0c5efe5e69fdaea
+  Change: ed81d7f032e25d9cab357726c0c5efe5e69fdaea
   Author: Apocalypse <perl@0ne.us>
-  Date:   Fri Feb 4 00:24:59 2011 -0700
-  
+  Date : 2011-02-04 00:24:59 +0000
+
     New CPAN release of Dist-Zilla-Plugin-Authority - v1.003
 
     Released: 2011-02-04 07:24:46 UTC
@@ -96,140 +147,20 @@
     Tweaked the ABSTRACT section ( thanks FLORA + GETTY )
 
     Add ability to read from ~/.pause file for the authority ( thanks
-    WOLVERIAN )
+    WOLVERIAN ) 
 
-  commit 0bc0c5b809bf61e481f9dcd4c2bc76d8302b7280
+  Change: 0bc0c5b809bf61e481f9dcd4c2bc76d8302b7280
   Author: Apocalypse <perl@0ne.us>
-  Date:   Fri Feb 4 00:12:41 2011 -0700
-  
-    add ability to read from ~/.pause
+  Date : 2011-02-04 00:12:41 +0000
 
-  commit 4dba562ac671050c7138e1339c7f0c43305f8161
+    add ability to read from ~/.pause 
+
+  Change: 4dba562ac671050c7138e1339c7f0c43305f8161
   Author: Apocalypse <perl@0ne.us>
-  Date:   Thu Dec 16 18:04:33 2010 -0700
-  
+  Date : 2010-12-16 18:04:33 +0000
+
     tweak abstract wording 
 
-=======================================
-2010-12-13 18:32:24 -0700 release-1.002
-=======================================
-
-  commit 392c7109b7a901b39284e0a0b3924bf2b81895d8
-  Author: Apocalypse <perl@0ne.us>
-  Date:   Mon Dec 13 18:32:24 2010 -0700
-  
-    New CPAN release of Dist-Zilla-Plugin-Authority - v1.002
-
-    Released: 2010-12-14 01:32:18 UTC
-
-    Added the "do_munging" attr to control the variable declarations in
-    packages ( thanks FLORA )
-
-  commit 66cdf5228bd35acc68097fb2960d0bb22a256b5c
-  Author: Apocalypse <perl@0ne.us>
-  Date:   Mon Dec 13 18:29:48 2010 -0700
-  
-    tweak example dist.ini
-
-  commit 23a502971c1534374f09184d989fe3581a7d5eee
-  Author: Apocalypse <perl@0ne.us>
-  Date:   Mon Dec 13 17:28:02 2010 -0700
-  
-    tweak POD
-
-  commit 15a6fc37db8e290d925e9a47a2071304b0bb4b1f
-  Author: Apocalypse <perl@0ne.us>
-  Date:   Mon Dec 13 15:36:51 2010 -0700
-  
-    add do_munging attr at request of FLORA, thanks
-
-  commit 4550bf0bf5855dfc471cfb55b4cb053a53bd2913
-  Author: Apocalypse <perl@0ne.us>
-  Date:   Tue Dec 7 19:47:49 2010 -0700
-  
-    new release tarball 
-
-=======================================
-2010-12-07 19:36:19 -0700 release-1.001
-=======================================
-
-  commit be86aade505b21c843e179791051e2fdc00c6712
-  Author: Apocalypse <perl@0ne.us>
-  Date:   Tue Dec 7 19:36:19 2010 -0700
-  
-    New CPAN release of Dist-Zilla-Plugin-Authority - v1.001
-
-    Released: 2010-12-08 02:36:12 UTC
-
-    Updated to require Dist::Zilla v4 ( so we can access the %PAUSE stash
-    )
-
-    The "authority" attr is not required anymore ( defaults to the %PAUSE
-    username )
-
-    Backported some code from Dist::Zilla::Plugin::PkgVersion v4 ( as
-    usual, thanks RJBS )
-
-    Add $AUTHORITY to script files too ( if they have a package
-    declaration )
-
-    Make do_metadata default to true ( thanks FLORA )
-
-  commit e6a747e42f296aacd7e39e83502894e86ce1d920
-  Author: Apocalypse <perl@0ne.us>
-  Date:   Tue Dec 7 18:25:03 2010 -0700
-  
-    pre-release cleanups
-
-  commit 2fec06211b36d12da2ecf880e89d6b21d2ec7199
-  Author: Apocalypse <perl@0ne.us>
-  Date:   Mon Dec 6 16:33:50 2010 -0700
-  
-    tweak some printouts
-
-  commit 3ed6fa07dd35bd95cb23a98737a03e9ed5201949
-  Author: Apocalypse <perl@0ne.us>
-  Date:   Mon Dec 6 12:39:40 2010 -0700
-  
-    make do_metadata default to true
-
-  commit 61d6b96c63704420d2288ee0a00166d5780ae9ed
-  Author: Apocalypse <perl@0ne.us>
-  Date:   Sun Dec 5 23:29:25 2010 -0700
-  
-    remove some unnecessary stopwords
-
-  commit 837b3b531141f8353d440fc4aaf769410b09766c
-  Author: Apocalypse <perl@0ne.us>
-  Date:   Sun Dec 5 22:11:33 2010 -0700
-  
-    add support for script files, automatic PAUSE detection, dzil v4
-    support, and cleanup some stuff
-
-  commit e6849e4d19300d69e16327ee15fa8a7704ae34b6
-  Author: Apocalypse <perl@0ne.us>
-  Date:   Sun Dec 5 19:20:43 2010 -0700
-  
-    tidy up Changes
-
-  commit eb318b01848f2decc7b7b0f7c0bbe6e7f879e34b
-  Author: Apocalypse <perl@0ne.us>
-  Date:   Sun Dec 5 19:16:08 2010 -0700
-  
-    backport changes to PkgVersion in dzil v4 and minor cleanups
-
-  commit 45896b8195e0724085f347e7991e70d1fdc3e268
-  Author: Apocalypse <perl@0ne.us>
-  Date:   Sun May 30 11:07:33 2010 -0700
-  
-    fix gitignore again
-
-  commit 8f0df5225619a8f05d1462dd1e3d256b566c0c49
-  Author: Apocalypse <perl@0ne.us>
-  Date:   Sun May 30 10:51:58 2010 -0700
-  
-    fix gitingore problem 
-
-===================================
-End of changes in the last 365 days
-===================================
+================================================
+Plus 3 releases after 2011-01-03 00:00:00 +0000.
+================================================
