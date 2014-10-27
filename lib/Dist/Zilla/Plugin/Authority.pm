@@ -1,19 +1,16 @@
 #
 # This file is part of Dist-Zilla-Plugin-Authority
 #
-# This software is copyright (c) 2012 by Apocalypse.
+# This software is copyright (c) 2014 by Apocalypse.
 #
 # This is free software; you can redistribute it and/or modify it under
 # the same terms as the Perl 5 programming language system itself.
 #
 use strict; use warnings;
 package Dist::Zilla::Plugin::Authority;
-{
-  $Dist::Zilla::Plugin::Authority::VERSION = '1.006';
-}
-BEGIN {
-  $Dist::Zilla::Plugin::Authority::AUTHORITY = 'cpan:APOCAL';
-}
+# git description: release-1.006-8-g48e8c8e
+$Dist::Zilla::Plugin::Authority::VERSION = '1.007';
+our $AUTHORITY = 'cpan:APOCAL';
 
 # ABSTRACT: Add the $AUTHORITY variable and metadata to your distribution
 
@@ -33,6 +30,15 @@ with(
     'Dist::Zilla::Role::PPI' => { -version => '4.300001' },
 );
 
+#pod =attr authority
+#pod
+#pod The authority you want to use. It should be something like C<cpan:APOCAL>.
+#pod
+#pod Defaults to the username set in the %PAUSE stash in the global config.ini or dist.ini ( Dist::Zilla v4 addition! )
+#pod
+#pod If you prefer to not put it in config/dist.ini you can put it in "~/.pause" just like Dist::Zilla did before v4.
+#pod
+#pod =cut
 
 {
 	use Moose::Util::TypeConstraints 1.01;
@@ -76,6 +82,13 @@ with(
 	no Moose::Util::TypeConstraints;
 }
 
+#pod =attr do_metadata
+#pod
+#pod A boolean value to control if the authority should be added to the metadata.
+#pod
+#pod Defaults to true.
+#pod
+#pod =cut
 
 has do_metadata => (
 	is => 'ro',
@@ -83,6 +96,13 @@ has do_metadata => (
 	default => 1,
 );
 
+#pod =attr do_munging
+#pod
+#pod A boolean value to control if the $AUTHORITY variable should be added to the modules.
+#pod
+#pod Defaults to true.
+#pod
+#pod =cut
 
 has do_munging => (
 	is => 'ro',
@@ -90,12 +110,55 @@ has do_munging => (
 	default => 1,
 );
 
+#pod =attr locate_comment
+#pod
+#pod A boolean value to control if the $AUTHORITY variable should be added where a
+#pod C<# AUTHORITY> comment is found.  If this is set then an appropriate comment
+#pod is found, and C<our $AUTHORITY = 'cpan:PAUSEID';> is inserted preceding the
+#pod comment on the same line.
+#pod
+#pod This basically implements what L<OurPkgVersion|Dist::Zilla::Plugin::OurPkgVersion>
+#pod does for L<PkgVersion|Dist::Zilla::Plugin::PkgVersion>.
+#pod
+#pod Defaults to false.
+#pod
+#pod NOTE: If you use this method, then we will not use the pkg style of declaration! That way, we keep the line numbering consistent.
+#pod
+#pod =cut
 
 has locate_comment => (
 	is => 'ro',
 	isa => 'Bool',
 	default => 0,
 );
+
+#pod =attr authority_style
+#pod
+#pod A value to control the type of the $AUTHORITY declaration. There are two styles: 'pkg' or 'our'. In the past
+#pod this module defaulted to the 'pkg' style but due to various issues 'our' is now the default. Here's what both styles
+#pod would look like in the resulting code:
+#pod
+#pod 	# pkg
+#pod 	BEGIN {
+#pod 		$Dist::Zilla::Plugin::Authority::AUTHORITY = 'cpan:APOCAL';
+#pod 	}
+#pod
+#pod 	# our
+#pod 	our $AUTHORITY = 'cpan:APOCAL';
+#pod
+#pod =cut
+
+{
+	use Moose::Util::TypeConstraints 1.01;
+
+	has authority_style => (
+		is => 'ro',
+		isa => enum( [ qw( pkg our ) ] ),
+		default => 'our',
+	);
+
+	no Moose::Util::TypeConstraints;
+}
 
 sub metadata {
 	my( $self ) = @_;
@@ -125,6 +188,133 @@ sub _munge_file {
 	return;
 }
 
+# create an 'our' style assignment string of Perl code
+# ->_template_our_authority({
+#       whitespace => 'some white text preceeding the our',
+#		authority  => 'the author to assign authority to',
+#       comment    => 'original comment string',
+# })
+sub _template_our_authority {
+	my $variable = "AUTHORITY";
+	return sprintf qq[%sour \$%s = '%s'; %s\n], $_[1]->{whitespace}, $variable, $_[1]->{authority}, $_[1]->{comment};
+}
+
+# create a 'pkg' style assignment string of Perl code
+# ->_template_pkg_authority({
+#		package => 'the package the variable is to be created in',
+#       authority => 'the author to assign authority to',
+# })
+sub _template_pkg_authority {
+	my $variable = sprintf "%s::AUTHORITY", $_[1]->{package};
+	return sprintf qq[BEGIN {\n  \$%s = '%s';\n}\n], $variable, $_[1]->{authority};
+}
+
+# Generate a PPI element containing our assignment
+sub _make_authority {
+	my ( $self, $package ) = @_;
+
+	my $code_hunk;
+	if ( $self->authority_style eq 'our' ) {
+		$code_hunk = $self->_template_our_authority({ whitespace => '', authority => $self->authority, comment => '' });
+	} else {
+		$code_hunk = $self->_template_pkg_authority({ package => $package, authority => $self->authority });
+	}
+
+	my $doc = PPI::Document->new( \$code_hunk );
+	my @children = $doc->schildren;
+	return $children[0]->clone;
+}
+
+# Insert an AUTHORITY assignment inside a <package $package { }> declaration( $block )
+sub _inject_block_authority {
+	my ( $self, $block, $package ) = @_ ;
+	$self->log_debug( [ 'Inserting inside a package NAME BLOCK statement' ] );
+	unshift $block->{children},
+		PPI::Token::Whitespace->new("\n"),
+		$self->_make_authority( $package ),
+		PPI::Token::Whitespace->new("\n");
+	return;
+}
+
+# Insert an AUTHORITY assignment immediately after the <package $package> declaration ( $stmt )
+sub _inject_plain_authority {
+	my ( $self, $file, $stmt, $package ) = @_ ;
+	$self->log_debug( [ 'Inserting after a plain package declaration' ] );
+	Carp::carp( "error inserting AUTHORITY in " . $file->name )
+		unless $stmt->insert_after( $self->_make_authority($package) )
+		and    $stmt->insert_after( PPI::Token::Whitespace->new("\n") );
+}
+
+# Replace the content of $line with an AUTHORITY assignment, preceeded by $ws, succeeded by $comment
+sub _replace_authority_comment {
+	my ( $self, $file, $line, $ws, $comment ) = @_ ;
+	$self->log_debug( [ 'adding $AUTHORITY assignment to line %d in %s', $line->line_number, $file->name ] );
+	$line->set_content(
+			$self->_template_our_authority({ whitespace => $ws, authority => $self->authority, comment => $comment })
+	);
+	return;
+}
+
+# Uses # AUTHORITY comments to work out where to put declarations
+sub _munge_perl_authority_comments {
+	my ( $self, $document, $file ) = @_ ;
+
+	my $comments = $document->find('PPI::Token::Comment');
+
+	return unless ref $comments;
+
+	return unless ref $comments eq 'ARRAY';
+
+	my $found_authority = 0;
+
+	foreach my $line ( @$comments ) {
+		next unless $line =~ /^(\s*)(\#\s+AUTHORITY\b)$/xms;
+		$self->_replace_authority_comment( $file, $line, $1, $2 );
+		$found_authority = 1;
+	}
+    if (  not $found_authority ) {
+		$self->log( [ 'skipping %s: consider adding a "# AUTHORITY" comment', $file->name ] );
+		return;
+	}
+
+	$self->save_ppi_document_to_file( $document, $file );
+	return 1;
+}
+
+# Places Fully Qualified $AUTHORITY values in packages
+sub _munge_perl_packages {
+	my ( $self, $document, $file ) = @_ ;
+
+	return unless my $package_stmts = $document->find( 'PPI::Statement::Package' );
+
+	my %seen_pkgs;
+
+	for my $stmt ( @$package_stmts ) {
+		my $package = $stmt->namespace;
+
+		# Thanks to rafl ( Florian Ragwitz ) for this
+		if ( $seen_pkgs{ $package }++ ) {
+			$self->log( [ 'skipping package re-declaration for %s', $package ] );
+			next;
+		}
+
+		# Thanks to autarch ( Dave Rolsky ) for this
+		if ( $stmt->content =~ /package\s*(?:#.*)?\n\s*\Q$package/ ) {
+			$self->log( [ 'skipping private package %s', $package ] );
+			next;
+		}
+		$self->log_debug( [ 'adding $AUTHORITY assignment to %s in %s', $package, $file->name ] );
+
+		if( my $block = $stmt->find_first('PPI::Structure::Block') ) {
+			$self->_inject_block_authority( $block, $package );
+			next;
+		}
+		$self->_inject_plain_authority( $file, $stmt, $package );
+		next;
+	}
+	$self->save_ppi_document_to_file( $document, $file );
+}
+
 sub _munge_perl {
 	my( $self, $file ) = @_;
 
@@ -137,74 +327,25 @@ sub _munge_perl {
 
 	# Should we use the comment to insert the $AUTHORITY or the pkg declaration?
 	if ( $self->locate_comment ) {
-		my $comments = $document->find( 'PPI::Token::Comment' );
-		my $found_authority;
-		if ( ref $comments and ref( $comments ) eq 'ARRAY' ) {
-			foreach my $line ( @$comments ) {
-				if ( $line =~ /^(\s*)(\#\s+AUTHORITY\b)$/xms ) {
-					my ( $ws, $comment ) = ( $1, $2 );
-					my $perl = $ws . 'our $AUTHORITY = \'' . $self->authority . "'; $comment\n";
-
-					$self->log_debug( [ 'adding $AUTHORITY assignment to line %d in %s', $line->line_number, $file->name ] );
-					$line->set_content( $perl );
-					$found_authority = 1;
-				}
-			}
-		}
-
-		if ( ! $found_authority ) {
-			$self->log( [ 'skipping %s: consider adding a "# AUTHORITY" comment', $file->name ] );
-			return;
-		}
+		return  $self->_munge_perl_authority_comments($document, $file);
 	} else {
-		return unless my $package_stmts = $document->find( 'PPI::Statement::Package' );
-
-		my %seen_pkgs;
-
-		for my $stmt ( @$package_stmts ) {
-			my $package = $stmt->namespace;
-
-			# Thanks to rafl ( Florian Ragwitz ) for this
-			if ( $seen_pkgs{ $package }++ ) {
-				$self->log( [ 'skipping package re-declaration for %s', $package ] );
-				next;
-			}
-
-			# Thanks to autarch ( Dave Rolsky ) for this
-			if ( $stmt->content =~ /package\s*(?:#.*)?\n\s*\Q$package/ ) {
-				$self->log( [ 'skipping private package %s', $package ] );
-				next;
-			}
-
-			# Same \x20 hack as seen in PkgVersion, blarh!
-			my $perl = "BEGIN {\n  \$${package}::AUTHORITY\x20=\x20'" . $self->authority . "';\n}\n";
-			my $doc = PPI::Document->new( \$perl );
-			my @children = $doc->schildren;
-
-			$self->log_debug( [ 'adding $AUTHORITY assignment to %s in %s', $package, $file->name ] );
-
-			Carp::carp( "error inserting AUTHORITY in " . $file->name )
-				unless $stmt->insert_after( $children[0]->clone )
-				and    $stmt->insert_after( PPI::Token::Whitespace->new("\n") );
-		}
+		return $self->_munge_perl_packages( $document, $file );
 	}
-
-    $self->save_ppi_document_to_file( $document, $file );
 }
 
 no Moose;
 __PACKAGE__->meta->make_immutable;
 1;
 
-
 __END__
+
 =pod
 
-=for :stopwords Apocalypse cpan testmatrix url annocpan anno bugtracker rt cpants kwalitee
-diff irc mailto metadata placeholders metacpan RJBS FLORA dist ini json
-username yml
+=encoding UTF-8
 
-=encoding utf-8
+=for :stopwords Apocalypse Dave Fredric Kent Metheringham Nigel Randy Rolsky Stauner cpan
+testmatrix url annocpan anno bugtracker rt cpants kwalitee diff irc mailto
+metadata placeholders metacpan RJBS FLORA dist ini json username yml
 
 =for Pod::Coverage metadata munge_files
 
@@ -214,7 +355,7 @@ Dist::Zilla::Plugin::Authority - Add the $AUTHORITY variable and metadata to you
 
 =head1 VERSION
 
-  This document describes v1.006 of Dist::Zilla::Plugin::Authority - released January 02, 2012 as part of Dist-Zilla-Plugin-Authority.
+  This document describes v1.007 of Dist::Zilla::Plugin::Authority - released October 27, 2014 as part of Dist-Zilla-Plugin-Authority.
 
 =head1 DESCRIPTION
 
@@ -227,9 +368,7 @@ attribute.
 
 This code will be added to any package declarations in your perl files:
 
-	BEGIN {
-	  $Dist::Zilla::Plugin::Authority::AUTHORITY = 'cpan:APOCAL';
-	}
+	our $AUTHORITY = 'cpan:APOCAL';
 
 Your metadata ( META.yml or META.json ) will have an entry looking like this:
 
@@ -268,6 +407,22 @@ This basically implements what L<OurPkgVersion|Dist::Zilla::Plugin::OurPkgVersio
 does for L<PkgVersion|Dist::Zilla::Plugin::PkgVersion>.
 
 Defaults to false.
+
+NOTE: If you use this method, then we will not use the pkg style of declaration! That way, we keep the line numbering consistent.
+
+=head2 authority_style
+
+A value to control the type of the $AUTHORITY declaration. There are two styles: 'pkg' or 'our'. In the past
+this module defaulted to the 'pkg' style but due to various issues 'our' is now the default. Here's what both styles
+would look like in the resulting code:
+
+	# pkg
+	BEGIN {
+		$Dist::Zilla::Plugin::Authority::AUTHORITY = 'cpan:APOCAL';
+	}
+
+	# our
+	our $AUTHORITY = 'cpan:APOCAL';
 
 =head1 SEE ALSO
 
@@ -358,7 +513,7 @@ CPANTS
 
 The CPANTS is a website that analyzes the Kwalitee ( code metrics ) of a distribution.
 
-L<http://cpants.perl.org/dist/overview/Dist-Zilla-Plugin-Authority>
+L<http://cpants.cpanauthors.org/dist/overview/Dist-Zilla-Plugin-Authority>
 
 =item *
 
@@ -431,13 +586,37 @@ The code is open to the world, and available for you to hack on. Please feel fre
 with it, or whatever. If you want to contribute patches, please send me a diff or prod me to pull
 from your repository :)
 
-L<http://github.com/apocalypse/perl-dist-zilla-plugin-authority>
+L<https://github.com/apocalypse/perl-dist-zilla-plugin-authority>
 
   git clone git://github.com/apocalypse/perl-dist-zilla-plugin-authority.git
 
 =head1 AUTHOR
 
 Apocalypse <APOCAL@cpan.org>
+
+=head2 CONTRIBUTORS
+
+=for stopwords Dave Rolsky Kent Fredric Nigel Metheringham Randy Stauner
+
+=over 4
+
+=item *
+
+Dave Rolsky <autarch@urth.org>
+
+=item *
+
+Kent Fredric <kentnl@cpan.org>
+
+=item *
+
+Nigel Metheringham <nigel.metheringham@dev.intechnology.co.uk>
+
+=item *
+
+Randy Stauner <randy@magnificent-tears.com>
+
+=back
 
 =head1 ACKNOWLEDGEMENTS
 
@@ -447,13 +626,13 @@ Props goes out to FLORA for prodding me to improve this module!
 
 =head1 COPYRIGHT AND LICENSE
 
-This software is copyright (c) 2012 by Apocalypse.
+This software is copyright (c) 2014 by Apocalypse.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.
 
 The full text of the license can be found in the
-'LICENSE' file included with this distribution.
+F<LICENSE> file included with this distribution.
 
 =head1 DISCLAIMER OF WARRANTY
 
@@ -477,4 +656,3 @@ EVEN IF SUCH HOLDER OR OTHER PARTY HAS BEEN ADVISED OF THE POSSIBILITY OF
 SUCH DAMAGES.
 
 =cut
-

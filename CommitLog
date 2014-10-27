@@ -1,166 +1,62 @@
 ==================================================
-Changes from 2011-01-03 00:00:00 +0000 to present.
+Changes from 2013-10-27 00:00:00 +0000 to present.
 ==================================================
 
 ------------------------------------------
-version 1.006 at 2012-01-03 04:14:31 +0000
+version 1.007 at 2014-10-27 20:42:04 +0000
 ------------------------------------------
 
-  Change: 90e45eb8a3103dcf54e7871d994978106feb6e38
-  Author: Apocalypse <perl@0ne.us>
-  Date : 2012-01-02 20:10:08 +0000
+  Change: 48e8c8e8b29d9a8a37c8846167fec224aea19d7b
+  Author: Apocalypse <APOCAL@cpan.org>
+  Date : 2014-10-27 13:16:33 +0000
 
-    Merge pull request #4 from autarch/master
+    switch to using our instead of pkg, yay 
 
-    This makes this plugin a fair bit faster, especially when dealing
-    with many module files 
+  Change: fbd174529eef85cf9b23a2d86cb10caac3810e38
+  Author: Apocalypse <apocalypse@users.noreply.github.com>
+  Date : 2014-10-27 12:16:48 +0000
 
-  Change: 82ac3f6b615c07f9d0b60f4d4aa3ad9956816505
-  Author: Dave Rolsky <autarch@urth.org>
-  Date : 2011-09-19 15:13:32 +0000
+    Merge pull request #5 from kentfredric/pkg_block
 
-    Doh, typo 
+    Pkg block syntax support 
 
-  Change: c37a2259bbd7443f6b810f9f537a9bc7dcc12237
-  Author: Dave Rolsky <autarch@urth.org>
-  Date : 2011-09-19 14:59:10 +0000
+  Change: 2dbde0294c55761250af0440b5332530e4a93b87
+  Author: Apocalypse <APOCAL@cpan.org>
+  Date : 2014-10-27 11:50:40 +0000
 
-    Put version requirement in code 
+    tweak gitignore 
 
-  Change: 7f02443b8ee4889a6a286581cedfde8d31f6c730
-  Author: Dave Rolsky <autarch@urth.org>
-  Date : 2011-09-19 14:57:49 +0000
+  Change: 9eba234bc2f0108f447031d5b427d3bc4b988813
+  Author: Apocalypse <APOCAL@cpan.org>
+  Date : 2014-10-27 11:50:11 +0000
 
-    Changes for PPI 
+    tweak changes 
 
-  Change: 37fe049cfa69d62da312ace4566399c9843f6b34
-  Author: Dave Rolsky <autarch@urth.org>
-  Date : 2011-09-19 14:56:43 +0000
+  Change: 4aeb0089dcd961d49065d38708e528aa2eb33a3d
+  Author: Apocalypse <APOCAL@cpan.org>
+  Date : 2014-10-27 11:47:32 +0000
 
-    Use new DZIL::Role::PPI to speed up PPI operations 
+    add mailmap 
 
-------------------------------------------
-version 1.005 at 2011-04-14 17:05:44 +0000
-------------------------------------------
+  Change: d32a7dfbaff4a205550269c8c0ab2017a113540c
+  Author: Kent Fredric <kentnl@cpan.org>
+  Date : 2013-01-07 05:30:18 +0000
 
-  Change: cfa23ed68fe47b3ec9ac69ef2823ddd411b8980b
-  Author: Apocalypse <perl@0ne.us>
-  Date : 2011-04-14 10:05:44 +0000
+    Add support for the BLOCK form of package statements 
 
-    New CPAN release of Dist-Zilla-Plugin-Authority - v1.005
+  Change: eff878610cbc4d27091deb59bae6e44427fb53ac
+  Author: Kent Fredric <kentnl@cpan.org>
+  Date : 2013-01-07 05:30:18 +0000
 
-    Released: 2011-04-14 17:05:17 UTC
+    refactor the code that handles pkg authorities 
 
-    Added locate_comment which finds a # AUTHORITY comment and puts
-    authority there ( thanks NIGELM! ) 
+  Change: 11320ff1b75794a7429c622ed62d94a4b3a8c6ac
+  Author: Kent Fredric <kentnl@cpan.org>
+  Date : 2013-01-07 05:30:18 +0000
 
-  Change: 6188cf26c29596abd8a8e4c840ede16bd303c214
-  Author: Apocalypse <perl@0ne.us>
-  Date : 2011-04-14 10:04:30 +0000
-
-    reformat some POD 
-
-  Change: 2037cab219b94d35698b60aae4695e603a813c02
-  Author: Apocalypse <perl@0ne.us>
-  Date : 2011-04-14 09:59:10 +0000
-
-    more tweaks 
-
-  Change: 5dc94aa3aa7865969e5254759105571413403ae1
-  Author: Apocalypse <perl@0ne.us>
-  Date : 2011-04-14 09:54:19 +0000
-
-    more tweaks to locate_comment logic 
-
-  Change: cd5156e262da782f01a5544508953a0fe49f2929
-  Author: Apocalypse <perl@0ne.us>
-  Date : 2011-04-14 09:25:18 +0000
-
-    style tweaks and some logging tweaks to the recent patch 
-
-  Change: e631d7026bd1cf970f30d8e3ddbce9fbfb644b99
-  Author: Nigel Metheringham <nigel.metheringham@dev.intechnology.co.uk>
-  Date : 2011-04-14 15:50:54 +0000
-
-    Implemented locate_comment which uses a comment to locate source
-    munge
-
-    A comment of the form
-
-    # AUTHORITY has
-
-    out $AUTHORITY = 'cpan:SOMEONE';
-
-    inserted before it on the same line.
-
-    This prevents the changes upsetting Perl::Critic etc 
-
-------------------------------------------
-version 1.004 at 2011-02-21 17:55:38 +0000
-------------------------------------------
-
-  Change: 21d6c01df508391bd74a8753d810e719fb6b3b32
-  Author: Apocalypse <perl@0ne.us>
-  Date : 2011-02-21 10:55:38 +0000
-
-    New CPAN release of Dist-Zilla-Plugin-Authority - v1.004
-
-    Released: 2011-02-21 17:55:27 UTC
-
-    Tweak the authority regex to be a bit more liberal ( thanks
-    RWSTAUNER! ) 
-
-  Change: ad09ec604834c23de1bb1a7d3a8d62dfe5b746cb
-  Author: Apocalypse <perl@0ne.us>
-  Date : 2011-02-21 10:49:50 +0000
-
-    Merge branch 'master' of
-    https://github.com/magnificent-tears/perl-dist-zilla-plugin-authority
-    into magnificent-tears-master 
-
-  Change: ac2f705fa8156e9f306071c4544605230942261b
-  Author: Randy Stauner <randy@magnificent-tears.com>
-  Date : 2011-01-18 16:26:56 +0000
-
-    Allow authority to contain any non-space character after the colon
-
-    This allows "Anything matching <alpha>+ \: \S+ is treated as an
-    author(ity)" as described in the "shorthand" section of
-    http://perlcabal.org/syn/S11.html#Versioning
-
-    Currently the "uri scheme" (the part before the colon) is not
-    restricted to alphabetic characters but allows any word characters to
-    maintain backward (and possibly forward) compatibility. 
-
-------------------------------------------
-version 1.003 at 2011-02-04 07:24:59 +0000
-------------------------------------------
-
-  Change: ed81d7f032e25d9cab357726c0c5efe5e69fdaea
-  Author: Apocalypse <perl@0ne.us>
-  Date : 2011-02-04 00:24:59 +0000
-
-    New CPAN release of Dist-Zilla-Plugin-Authority - v1.003
-
-    Released: 2011-02-04 07:24:46 UTC
-
-    Tweaked the ABSTRACT section ( thanks FLORA + GETTY )
-
-    Add ability to read from ~/.pause file for the authority ( thanks
-    WOLVERIAN ) 
-
-  Change: 0bc0c5b809bf61e481f9dcd4c2bc76d8302b7280
-  Author: Apocalypse <perl@0ne.us>
-  Date : 2011-02-04 00:12:41 +0000
-
-    add ability to read from ~/.pause 
-
-  Change: 4dba562ac671050c7138e1339c7f0c43305f8161
-  Author: Apocalypse <perl@0ne.us>
-  Date : 2010-12-16 18:04:33 +0000
-
-    tweak abstract wording 
+    Authority.pm: defer comment processing code to a seperate sub,
+    Refactor the <our AUTHORITY> code into several pices 
 
 ================================================
-Plus 3 releases after 2011-01-03 00:00:00 +0000.
+Plus 7 releases after 2013-10-27 00:00:00 +0000.
 ================================================

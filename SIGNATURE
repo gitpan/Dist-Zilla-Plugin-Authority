@@ -1,5 +1,5 @@
 This file contains message digests of all files listed in MANIFEST,
-signed via the Module::Signature module, version 0.68.
+signed via the Module::Signature module, version 0.73.
 
 To verify the content in this distribution, first make sure you have
 Module::Signature installed, then type:
@@ -14,27 +14,30 @@ not run its Makefile.PL or Build.PL.
 -----BEGIN PGP SIGNED MESSAGE-----
 Hash: SHA1
 
-SHA1 34dc12b593f9bf4240904de2212e213456a087f9 Build.PL
-SHA1 6f7517ac97809644dc05dfaa64a01f24bd41162d Changes
-SHA1 c360fda1e0157dc9266084f0a342f6cb15af2eba CommitLog
-SHA1 605e679fd8c69128c87fe65ba25ec22ef4e60beb INSTALL
-SHA1 b21ab868c795a981ac84ecee646535320cc1e706 LICENSE
-SHA1 f47b6c933a2e3b06f1634590ca9561f6a0b7b8a8 MANIFEST
-SHA1 68180cbb55de39be860656cefef6f84f790e23a7 MANIFEST.SKIP
-SHA1 cdbbe84c14e44ea1906e73f1182e39679273ee75 META.json
-SHA1 cb2b1459f1a1a79c3e2f4312493188769b1a97e3 META.yml
-SHA1 ba05211e0cde625c01b453af27d07ae97d1a6321 Makefile.PL
-SHA1 ff3b8484bda2aa1ef278a442ba496761ae962a97 README
+SHA1 92660e27fbfc9880ba2566fceeeb71f11751b233 AUTHOR_PLEDGE
+SHA1 a092690335ec1ea70bffb527c98c5efbcd9808c5 Build.PL
+SHA1 f15e417e024d696fbf4cd4ef2bc2211598ac5621 Changes
+SHA1 869cf1f74269b76e565cb5bea10c9da5feb66653 CommitLog
+SHA1 3f130b19ed50037c41cef4771dd74ff28561d913 INSTALL
+SHA1 e6514e4bc5abd3d1a8c7bd2a782c2f8737b413e7 LICENSE
+SHA1 39085f95f48f49c88b5bd4c6cff8037120f78770 MANIFEST
+SHA1 741d911a61846ad41df3210bb876f74bd99a51c3 MANIFEST.SKIP
+SHA1 5a3b108ea163b088acb9f4b42589d3cd42946237 META.json
+SHA1 b9ea4c545db614506b96157424264cdf3a2e10b6 META.yml
+SHA1 48c7a891e3a243901f637c0ca50cce2e925699e6 Makefile.PL
+SHA1 d91b9c775f495e5e391cc1140daba52e0fdf7038 README
+SHA1 377caf3c74ee67bff3529670725a100e4120ac3e cpanfile
 SHA1 115a2fcc018b95d81bb939c7f9586e8a1e3c022c dist.ini
+SHA1 ac625baf3b3b91bfe2c8b6ac504ef837553caaf4 doap.xml
 SHA1 834f67a486f71bba0242366165ada47cc1366130 examples/dist.ini
-SHA1 d7d85ddd525df4ff8dbf8b91619fa9836632cabc lib/Dist/Zilla/Plugin/Authority.pm
-SHA1 0071591470b1b731ad46f42d5c0f7994729bbc89 t/00-compile.t
-SHA1 c97108564d158a5d59974488af4eb5bf1d6371f4 t/000-report-versions-tiny.t
-SHA1 ed60c776390856b34c681be0c296242310c07313 t/apocalypse.t
+SHA1 7d36b8cb6f79068c16e561fec920a73c38ba07fb lib/Dist/Zilla/Plugin/Authority.pm
+SHA1 d5e7605fce9a7179db607b109286c1c53c7f8af8 t/00-compile.t
+SHA1 76ec99d9aa04d6173acee0ff2d85b5b49768c0f8 t/000-report-versions-tiny.t
+SHA1 b5a88afebec2ca2c14b79c237bcafc293e216854 t/apocalypse.t
 -----BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.11 (GNU/Linux)
+Version: GnuPG v1
 
-iEYEARECAAYFAk8CgKoACgkQGfr7vsGKgxzitgCgm1nwtHKfCJUYtgl+ScUx9AyO
-axoAnAuSraa2lSY9tcPCCjpoj57wdcBe
-=9MsN
+iEYEARECAAYFAlROrh4ACgkQGfr7vsGKgxwVJwCeJ4vRHaGNpvKwLFAJoUBZEO5O
+yu4An0Ayy5ccxVCYgknI58orW3WYY7tb
+=Wlb0
 -----END PGP SIGNATURE-----
