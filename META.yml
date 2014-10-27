@@ -25,7 +25,7 @@ no_index:
 provides:
   Dist::Zilla::Plugin::Authority:
     file: lib/Dist/Zilla/Plugin/Authority.pm
-    version: '1.007'
+    version: '1.008'
 requires:
   Dist::Zilla::Role::FileFinderUser: '4.102345'
   Dist::Zilla::Role::FileMunger: '4.102345'
@@ -45,7 +45,7 @@ resources:
   homepage: http://search.cpan.org/dist/Dist-Zilla-Plugin-Authority/
   license: http://dev.perl.org/licenses/
   repository: git://github.com/apocalypse/perl-dist-zilla-plugin-authority.git
-version: '1.007'
+version: '1.008'
 x_BuiltWith:
   modules:
     Dist::Zilla::Role::FileFinderUser: '5.021'
@@ -509,7 +509,7 @@ x_Dist_Zilla:
         Dist::Zilla::Plugin::Git::Tag:
           branch: ~
           signed: '0'
-          tag: release-1.007
+          tag: release-1.008
           tag_format: release-%v
           tag_message: 'Tagged release-%v'
           time_zone: local

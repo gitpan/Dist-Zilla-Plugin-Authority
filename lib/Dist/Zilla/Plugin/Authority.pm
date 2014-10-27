@@ -8,8 +8,8 @@
 #
 use strict; use warnings;
 package Dist::Zilla::Plugin::Authority;
-# git description: release-1.006-8-g48e8c8e
-$Dist::Zilla::Plugin::Authority::VERSION = '1.007';
+# git description: release-1.007-2-gc463f59
+$Dist::Zilla::Plugin::Authority::VERSION = '1.008';
 our $AUTHORITY = 'cpan:APOCAL';
 
 # ABSTRACT: Add the $AUTHORITY variable and metadata to your distribution
@@ -160,10 +160,21 @@ has locate_comment => (
 	no Moose::Util::TypeConstraints;
 }
 
+# sanity check ourselves...
+my $seen_author;
+
 sub metadata {
 	my( $self ) = @_;
 
 	return if ! $self->do_metadata;
+
+	if ( ! defined $seen_author ) {
+		$seen_author = $self->authority;
+	} else {
+		if ( $seen_author ne $self->authority ) {
+			die "Specifying multiple authorities will not work! We got '$seen_author' and '" . $self->authority . "'";
+		}
+	}
 
 	$self->log_debug( 'adding AUTHORITY to metadata' );
 
@@ -176,6 +187,14 @@ sub munge_files {
 	my( $self ) = @_;
 
 	return if ! $self->do_munging;
+
+	if ( ! defined $seen_author ) {
+		$seen_author = $self->authority;
+	} else {
+		if ( $seen_author ne $self->authority ) {
+			die "Specifying multiple authorities will not work! We got '$seen_author' and '" . $self->authority . "'";
+		}
+	}
 
 	$self->_munge_file( $_ ) for @{ $self->found_files };
 }
@@ -355,7 +374,7 @@ Dist::Zilla::Plugin::Authority - Add the $AUTHORITY variable and metadata to you
 
 =head1 VERSION
 
-  This document describes v1.007 of Dist::Zilla::Plugin::Authority - released October 27, 2014 as part of Dist-Zilla-Plugin-Authority.
+  This document describes v1.008 of Dist::Zilla::Plugin::Authority - released October 27, 2014 as part of Dist-Zilla-Plugin-Authority.
 
 =head1 DESCRIPTION
 
