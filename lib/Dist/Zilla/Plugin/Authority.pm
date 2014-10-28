@@ -8,8 +8,8 @@
 #
 use strict; use warnings;
 package Dist::Zilla::Plugin::Authority;
-# git description: release-1.007-2-gc463f59
-$Dist::Zilla::Plugin::Authority::VERSION = '1.008';
+# git description: release-1.008-1-g9f0cbc2
+$Dist::Zilla::Plugin::Authority::VERSION = '1.009';
 our $AUTHORITY = 'cpan:APOCAL';
 
 # ABSTRACT: Add the $AUTHORITY variable and metadata to your distribution
@@ -248,7 +248,11 @@ sub _make_authority {
 sub _inject_block_authority {
 	my ( $self, $block, $package ) = @_ ;
 	$self->log_debug( [ 'Inserting inside a package NAME BLOCK statement' ] );
-	unshift $block->{children},
+
+	# TODO watch https://github.com/neilbowers/Perl-MinimumVersion/issues/1
+	# because Perl::MinimumVersion didn't specify 5.14 we got: http://www.cpantesters.org/cpan/report/ffab485c-5e2a-11e4-846d-e015e1bfc7aa
+	# and tons of FAIL on perls < 5.14 :(
+	unshift @{ $block->{children} },
 		PPI::Token::Whitespace->new("\n"),
 		$self->_make_authority( $package ),
 		PPI::Token::Whitespace->new("\n");
@@ -374,7 +378,7 @@ Dist::Zilla::Plugin::Authority - Add the $AUTHORITY variable and metadata to you
 
 =head1 VERSION
 
-  This document describes v1.008 of Dist::Zilla::Plugin::Authority - released October 27, 2014 as part of Dist-Zilla-Plugin-Authority.
+  This document describes v1.009 of Dist::Zilla::Plugin::Authority - released October 27, 2014 as part of Dist-Zilla-Plugin-Authority.
 
 =head1 DESCRIPTION
 

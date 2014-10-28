@@ -1,10 +1,29 @@
 ==================================================
-Changes from 2013-10-27 00:00:00 +0000 to present.
+Changes from 2013-10-28 00:00:00 +0000 to present.
 ==================================================
 
 ------------------------------------------
-version 1.008 at 2014-10-27 21:33:12 +0000
+version 1.009 at 2014-10-28 03:40:30 +0000
 ------------------------------------------
+
+  Change: 9f0cbc25374574a18076d268de134e460e697e5b
+  Author: Apocalypse <APOCAL@cpan.org>
+  Date : 2014-10-27 20:34:49 +0000
+
+    fix unshift arrayref error, thanks kentnl and ether 
+
+------------------------------------------
+version 1.008 at 2014-10-27 21:35:22 +0000
+------------------------------------------
+
+  Change: 163678b66715dbc3cc39576972a39dd8d700878d
+  Author: Apocalypse <APOCAL@cpan.org>
+  Date : 2014-10-27 14:35:22 +0000
+
+    New CPAN release of Dist-Zilla-Plugin-Authority - v1.008
+
+    Made sure that we cannot be loaded with different authorities via
+    RT#86710 ( thanks ETHER! ) 
 
   Change: c463f59de9eae958be01cde63d59a09ec6111a4a
   Author: Apocalypse <APOCAL@cpan.org>
@@ -84,5 +103,5 @@ version 1.007 at 2014-10-27 20:42:35 +0000
     Refactor the <our AUTHORITY> code into several pices 
 
 ================================================
-Plus 7 releases after 2013-10-27 00:00:00 +0000.
+Plus 7 releases after 2013-10-28 00:00:00 +0000.
 ================================================

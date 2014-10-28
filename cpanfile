@@ -27,6 +27,7 @@ on 'test' => sub {
 
 on 'configure' => sub {
   requires "Module::Build" => "0.28";
+  requires "perl" => "5.006";
 };
 
 on 'develop' => sub {
